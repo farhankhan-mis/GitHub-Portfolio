@@ -1,10 +1,10 @@
 const seedApplications = [
-  {id:1,company:'Northstar Advisory',role:'Strategy Consulting Intern',location:'Washington, DC',area:'Consulting',score:92,status:'Planning',resume:'Consulting',deadline:'2026-09-20',materials:3},
-  {id:2,company:'Harborline Aerospace',role:'Data Analytics Intern',location:'Arlington, VA',area:'Data Analytics',score:89,status:'Applied',resume:'Data Analytics',deadline:'2026-09-24',materials:4},
-  {id:3,company:'Monument Financial',role:'Corporate Finance Intern',location:'Baltimore, MD',area:'Finance',score:85,status:'Interviewing',resume:'Finance',deadline:'2026-09-28',materials:4},
-  {id:4,company:'Pioneer Consumer Group',role:'Product Management Intern',location:'Chicago, IL',area:'Product Management',score:81,status:'Planning',resume:'Analyst',deadline:'2026-10-04',materials:2},
-  {id:5,company:'Blue Ridge Technologies',role:'Sales & Marketing Intern',location:'McLean, VA',area:'Sales & Marketing',score:78,status:'Applied',resume:'Sales / Marketing',deadline:'2026-10-12',materials:3},
-  {id:6,company:'Capital Transit Labs',role:'Business Operations Intern',location:'Remote, USA',area:'Operations',score:74,status:'Planning',resume:'Analyst',deadline:'2026-10-18',materials:2}
+  {id:1,company:'Northstar Advisory',role:'Strategy Consulting Intern',location:'Washington, DC',area:'Consulting',score:92,status:'Planning',resume:'Consulting',deadline:'2026-09-20'},
+  {id:2,company:'Harborline Aerospace',role:'Data Analytics Intern',location:'Arlington, VA',area:'Data Analytics',score:89,status:'Applied',resume:'Data Analytics',deadline:'2026-09-24'},
+  {id:3,company:'Monument Financial',role:'Corporate Finance Intern',location:'Baltimore, MD',area:'Finance',score:85,status:'Interviewing',resume:'Finance',deadline:'2026-09-28'},
+  {id:4,company:'Pioneer Consumer Group',role:'Product Management Intern',location:'Chicago, IL',area:'Product Management',score:81,status:'Planning',resume:'Analyst',deadline:'2026-10-04'},
+  {id:5,company:'Blue Ridge Technologies',role:'Sales & Marketing Intern',location:'McLean, VA',area:'Sales & Marketing',score:78,status:'Applied',resume:'Sales / Marketing',deadline:'2026-10-12'},
+  {id:6,company:'Capital Transit Labs',role:'Business Operations Intern',location:'Remote, USA',area:'Operations',score:74,status:'Planning',resume:'Analyst',deadline:'2026-10-18'}
 ];
 const archive = [
   {company:'Summit Partners Group',role:'Business Analyst Intern',area:'Consulting',status:'Closed',date:'Sep 8, 2026',notes:'Posting closed before application.'},
@@ -43,7 +43,7 @@ function populateFilters(){
 function renderApplications(){
  const query=$('#searchInput').value.toLowerCase(),sf=$('#statusFilter').value,af=$('#areaFilter').value;
  const rows=applications.filter(a=>(sf==='All'||a.status===sf)&&(af==='All'||a.area===af)&&[a.company,a.role,a.location].join(' ').toLowerCase().includes(query));
- $('#applicationsBody').innerHTML=rows.map(a=>`<tr><td><div class="company">${a.company}</div><div class="role">${a.role}</div></td><td>${a.location}</td><td class="priority-${priority(a.score).toLowerCase()}">${a.score} · ${priority(a.score)}</td><td><select class="status-select ${statusClass(a.status)}" data-id="${a.id}" aria-label="Status for ${a.company}">${statuses.map(s=>`<option ${s===a.status?'selected':''}>${s}</option>`).join('')}</select></td><td>${a.resume}</td><td><div class="materials" title="${a.materials} of 4 materials ready">${[1,2,3,4].map(n=>`<span class="material-dot ${n<=a.materials?'ready':''}">${n<=a.materials?'✓':'·'}</span>`).join('')}</div></td><td>${new Date(a.deadline+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">No opportunities match these filters.</td></tr>';
+ $('#applicationsBody').innerHTML=rows.map(a=>`<tr><td><div class="company">${a.company}</div><div class="role">${a.role}</div></td><td>${a.location}</td><td class="priority-${priority(a.score).toLowerCase()}">${a.score} · ${priority(a.score)}</td><td><select class="status-select ${statusClass(a.status)}" data-id="${a.id}" aria-label="Status for ${a.company}">${statuses.map(s=>`<option ${s===a.status?'selected':''}>${s}</option>`).join('')}</select></td><td>${a.resume}</td><td>${new Date(a.deadline+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">No opportunities match these filters.</td></tr>';
  $('#resultCount').textContent=`Showing ${rows.length} of ${applications.length} active opportunities`;
  $$('.status-select').forEach(el=>el.addEventListener('change',e=>{const item=applications.find(a=>a.id===Number(e.target.dataset.id));item.status=e.target.value;save()}));
 }
@@ -55,6 +55,6 @@ function showView(name){$$('.view').forEach(v=>v.classList.remove('active'));$$(
 $$('.nav-item').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));$$('[data-go]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.go)));
 ['searchInput','statusFilter','areaFilter'].forEach(id=>$('#'+id).addEventListener(id==='searchInput'?'input':'change',renderApplications));
 $('#addButton').addEventListener('click',()=>$('#addDialog').showModal());
-$('#saveOpportunity').addEventListener('click',e=>{if(!$('#addForm').reportValidity()){e.preventDefault();return}const data=new FormData($('#addForm'));const fit=Number(data.get('fit'));applications.push({id:Date.now(),company:data.get('company'),role:data.get('role'),location:data.get('location'),area:data.get('area'),score:55+fit*8,status:'Planning',resume:resumeFor(data.get('area')),deadline:data.get('deadline'),materials:1});$('#addForm').reset();save();showView('applications')});
+$('#saveOpportunity').addEventListener('click',e=>{if(!$('#addForm').reportValidity()){e.preventDefault();return}const data=new FormData($('#addForm'));const fit=Number(data.get('fit'));applications.push({id:Date.now(),company:data.get('company'),role:data.get('role'),location:data.get('location'),area:data.get('area'),score:55+fit*8,status:'Planning',resume:resumeFor(data.get('area')),deadline:data.get('deadline')});$('#addForm').reset();save();showView('applications')});
 $('#resetDemo').addEventListener('click',()=>{applications=structuredClone(seedApplications);localStorage.removeItem('internship-demo-data');renderAll()});
 renderAll();
