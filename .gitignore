@@ -1,0 +1,18 @@
+# Microsoft Office temporary and lock files
+~$*.xlsx
+~$*.xlsm
+~$*.docx
+
+# Personal or working copies
+personal/
+private/
+backups/
+*_Personal.xlsx
+*_Working_Copy.xlsx
+*_Backup*.xlsx
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.inspect.ndjson
