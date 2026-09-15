@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A privacy-safe internship application management dashboard with fictional demonstration data.">
+  <title>Internship Application Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">FK</span><div><strong>Internship Tracker</strong><small>Portfolio demo</small></div></div>
+      <nav aria-label="Dashboard sections">
+        <button class="nav-item active" data-view="dashboard">Overview</button>
+        <button class="nav-item" data-view="applications">Applications <span id="navActiveCount">0</span></button>
+        <button class="nav-item" data-view="archive">Archive <span id="navArchiveCount">0</span></button>
+      </nav>
+      <div class="sidebar-note"><strong>Privacy-safe demo</strong><p>Every company and application shown here is fictional.</p></div>
+      <a class="download-link" href="Internship_Application_Management_System.xlsx" download>Download Excel version</a>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div><p class="eyebrow">APPLICATION WORKSPACE</p><h1 id="pageTitle">Overview</h1></div>
+        <button class="primary" id="addButton">+ Add opportunity</button>
+      </header>
+
+      <section id="dashboardView" class="view active">
+        <div class="metric-grid" id="metricGrid"></div>
+        <div class="dashboard-grid">
+          <section class="panel focus-panel">
+            <div class="panel-heading"><div><p class="eyebrow">TODAY'S FOCUS</p><h2>Highest-priority opportunities</h2></div><button class="text-button" data-go="applications">View all</button></div>
+            <div id="priorityList" class="priority-list"></div>
+          </section>
+          <section class="panel pipeline-panel">
+            <div class="panel-heading"><div><p class="eyebrow">PIPELINE</p><h2>Application status</h2></div></div>
+            <div id="pipelineChart" class="pipeline-chart"></div>
+          </section>
+          <section class="panel activity-panel">
+            <div class="panel-heading"><div><p class="eyebrow">NEXT STEPS</p><h2>Upcoming deadlines</h2></div></div>
+            <div id="deadlineList"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="applicationsView" class="view">
+        <section class="panel table-panel">
+          <div class="toolbar">
+            <label class="search"><span>Search</span><input id="searchInput" type="search" placeholder="Company, role, or location"></label>
+            <label>Status<select id="statusFilter"><option value="All">All statuses</option></select></label>
+            <label>Career area<select id="areaFilter"><option value="All">All areas</option></select></label>
+            <button class="secondary" id="resetDemo">Reset demo data</button>
+          </div>
+          <div class="table-wrap">
+            <table><thead><tr><th>Company & role</th><th>Location</th><th>Priority</th><th>Status</th><th>Recommended résumé</th><th>Deadline</th></tr></thead><tbody id="applicationsBody"></tbody></table>
+          </div>
+          <p class="table-note" id="resultCount"></p>
+        </section>
+      </section>
+
+      <section id="archiveView" class="view">
+        <section class="panel table-panel">
+          <div class="panel-heading"><div><p class="eyebrow">APPLICATION HISTORY</p><h2>Archived opportunities</h2></div></div>
+          <div class="table-wrap"><table><thead><tr><th>Company & role</th><th>Career area</th><th>Final status</th><th>Date updated</th><th>Notes</th></tr></thead><tbody id="archiveBody"></tbody></table></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="addDialog">
+    <form method="dialog" id="addForm">
+      <div class="dialog-heading"><div><p class="eyebrow">NEW RECORD</p><h2>Add an opportunity</h2></div><button class="icon-button" value="cancel" aria-label="Close">×</button></div>
+      <div class="form-grid">
+        <label>Company<input name="company" required placeholder="Example Company"></label>
+        <label>Role<input name="role" required placeholder="Business Analyst Intern"></label>
+        <label>Location<input name="location" required placeholder="Washington, DC"></label>
+        <label>Career area<select name="area" required><option>Consulting</option><option>Data Analytics</option><option>Finance</option><option>Sales & Marketing</option><option>Operations</option><option>Product Management</option></select></label>
+        <label>Deadline<input name="deadline" type="date" required></label>
+        <label>Fit score (1–5)<input name="fit" type="number" min="1" max="5" value="4" required></label>
+      </div>
+      <p class="form-note">This demonstration stores changes only in this browser.</p>
+      <div class="dialog-actions"><button value="cancel" class="secondary">Cancel</button><button value="default" class="primary" id="saveOpportunity">Add opportunity</button></div>
+    </form>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>
