@@ -1,0 +1,17 @@
+.auth-card{width:min(760px,100%)}
+#verifyForm,#recoveryRequestForm,#newPasswordForm,.onboarding-form{display:grid;gap:16px;margin-top:22px}
+.text-button{border:0;background:transparent;color:#1e5eff;font-weight:700;padding:10px 0;cursor:pointer;text-align:left}
+.onboarding-form fieldset{border:1px solid #dbe3ef;border-radius:12px;padding:16px}
+.onboarding-form legend{padding:0 7px;font-size:.88rem;font-weight:800}
+.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.choice-grid label{display:flex;align-items:center;gap:8px;font-weight:600}
+.choice-grid input{width:auto}
+.label-help{color:#728196;font-size:.76rem;font-weight:500}
+.student-fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px;background:#f6f8fc;border:1px solid #dbe3ef;border-radius:12px}
+.feed-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:22px 0}
+.feed-toolbar p{color:#5f6f82}
+.opportunity-card{align-items:center}
+.opportunity-link{display:inline-block;text-decoration:none;white-space:nowrap}
+.demo-badge{align-self:center;padding:7px 10px;border-radius:999px;background:#eef3fa;color:#536b86;font-size:.78rem;font-weight:800;white-space:nowrap}
+@media(max-width:620px){.choice-grid{grid-template-columns:1fr}}
+@media(max-width:620px){.student-fields{grid-template-columns:1fr}.feed-toolbar{align-items:flex-start;flex-direction:column}}

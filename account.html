@@ -7,6 +7,7 @@
   <title>Internship Tracker — Sign in</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="account.css">
+  <link rel="stylesheet" href="account-flow.css">
 </head>
 <body class="account-page">
   <main class="auth-shell">
@@ -24,25 +25,73 @@
       <form id="authForm">
         <label>Email<input id="email" type="email" autocomplete="email" required></label>
         <label>Password<input id="password" type="password" minlength="8" autocomplete="current-password" required></label>
+        <label class="signup-only hidden">Confirm password<input id="confirmPassword" type="password" minlength="8" autocomplete="new-password"></label>
         <button class="primary auth-submit" type="submit">Sign in</button>
       </form>
+      <button class="text-button signin-only" id="forgotPassword" type="button">Forgot password?</button>
       <p class="form-message" id="authMessage" role="status"></p>
       <p class="privacy-note">Your application data is private to your account. Never reuse your GitHub or email password here.</p>
       <a href="index.html" class="demo-link">View the fictional portfolio demo</a>
     </section>
 
+    <section class="auth-card hidden" id="verifyCard">
+      <p class="eyebrow">VERIFY YOUR EMAIL</p>
+      <h1>Enter the six-digit code</h1>
+      <p class="auth-intro">We sent a verification code to <strong id="verifyEmail"></strong>.</p>
+      <form id="verifyForm">
+        <label>Verification code<input id="verificationCode" inputmode="numeric" autocomplete="one-time-code" minlength="6" maxlength="6" pattern="[0-9]{6}" required></label>
+        <button class="primary" type="submit">Verify account</button>
+      </form>
+      <button class="text-button" id="backToSignIn" type="button">Back to sign in</button>
+      <p class="form-message" id="verifyMessage" role="status"></p>
+    </section>
+
+    <section class="auth-card hidden" id="recoveryCard">
+      <p class="eyebrow">PASSWORD RECOVERY</p>
+      <h1 id="recoveryTitle">Reset your password</h1>
+      <p class="auth-intro" id="recoveryIntro">Enter your email and we’ll send a secure reset link.</p>
+      <form id="recoveryRequestForm">
+        <label>Email<input id="recoveryEmail" type="email" autocomplete="email" required></label>
+        <button class="primary" type="submit">Send reset email</button>
+      </form>
+      <form class="hidden" id="newPasswordForm">
+        <label>New password<input id="newPassword" type="password" minlength="8" autocomplete="new-password" required></label>
+        <label>Confirm new password<input id="confirmNewPassword" type="password" minlength="8" autocomplete="new-password" required></label>
+        <button class="primary" type="submit">Update password</button>
+      </form>
+      <button class="text-button" id="recoveryBack" type="button">Back to sign in</button>
+      <p class="form-message" id="recoveryMessage" role="status"></p>
+    </section>
+
+    <section class="auth-card hidden" id="onboardingCard">
+      <div class="workspace-heading"><div><p class="eyebrow">PERSONALIZE YOUR TRACKER</p><h1>Tell us what you’re looking for</h1></div><button class="secondary sign-out" type="button">Sign out</button></div>
+      <p class="auth-intro">These answers will be used to filter and rank opportunities. You can change them later.</p>
+      <form id="onboardingForm" class="onboarding-form">
+        <label>Are you currently a student or attending a university?<select name="in_school" id="studentStatus" required><option value="">Select one</option><option value="true">Yes</option><option value="false">No</option></select></label>
+        <div class="student-fields hidden" id="studentFields">
+          <label>Current education level<select name="education_level"><option value="">Select one</option><option>High school</option><option>Associate degree</option><option>Bachelor’s degree</option><option>Master’s degree</option><option>Doctoral degree</option><option>Certificate or bootcamp</option><option>Other</option></select></label>
+          <label>School or university<input name="school_name" autocomplete="organization"></label>
+          <label>Expected graduation year<input name="graduation_year" type="number" min="2026" max="2040"></label>
+          <label>Major or program <span class="label-help">Add more than one with commas</span><input name="majors" list="majorOptions" placeholder="Management Information Systems, Finance"></label>
+          <label>Minor or concentration <span class="label-help">Optional; separate with commas</span><input name="minors" list="minorOptions" placeholder="Business Analytics, Marketing"></label>
+        </div>
+        <fieldset><legend>Fields and industries that interest you</legend><div class="choice-grid"><label><input type="checkbox" name="industries" value="Business & Consulting"> Business & Consulting</label><label><input type="checkbox" name="industries" value="Technology"> Technology</label><label><input type="checkbox" name="industries" value="Finance & Accounting"> Finance & Accounting</label><label><input type="checkbox" name="industries" value="Healthcare"> Healthcare</label><label><input type="checkbox" name="industries" value="Government & Public Policy"> Government & Public Policy</label><label><input type="checkbox" name="industries" value="Engineering & Manufacturing"> Engineering & Manufacturing</label><label><input type="checkbox" name="industries" value="Media & Communications"> Media & Communications</label><label><input type="checkbox" name="industries" value="Education & Research"> Education & Research</label><label><input type="checkbox" name="industries" value="Law & Compliance"> Law & Compliance</label><label><input type="checkbox" name="industries" value="Environment & Sustainability"> Environment & Sustainability</label></div></fieldset>
+        <fieldset><legend>Types of roles you want to see</legend><div class="choice-grid"><label><input type="checkbox" name="role_interests" value="Analytics & Data"> Analytics & Data</label><label><input type="checkbox" name="role_interests" value="Consulting & Strategy"> Consulting & Strategy</label><label><input type="checkbox" name="role_interests" value="Finance & Accounting"> Finance & Accounting</label><label><input type="checkbox" name="role_interests" value="Marketing & Communications"> Marketing & Communications</label><label><input type="checkbox" name="role_interests" value="Sales & Business Development"> Sales & Business Development</label><label><input type="checkbox" name="role_interests" value="Product & Project Management"> Product & Project Management</label><label><input type="checkbox" name="role_interests" value="Operations & Supply Chain"> Operations & Supply Chain</label><label><input type="checkbox" name="role_interests" value="Human Resources"> Human Resources</label><label><input type="checkbox" name="role_interests" value="Software & IT"> Software & IT</label><label><input type="checkbox" name="role_interests" value="Engineering"> Engineering</label><label><input type="checkbox" name="role_interests" value="Design & UX"> Design & UX</label><label><input type="checkbox" name="role_interests" value="Research & Policy"> Research & Policy</label><label><input type="checkbox" name="role_interests" value="Legal & Compliance"> Legal & Compliance</label><label><input type="checkbox" name="role_interests" value="Science & Laboratory"> Science & Laboratory</label></div></fieldset>
+        <label>Other roles, skills, or keywords <span class="label-help">Optional; separate with commas</span><input name="custom_interests" placeholder="Cybersecurity, sports management, nonprofit"></label>
+        <fieldset><legend>Type of opportunity</legend><div class="choice-grid"><label><input type="checkbox" name="job_types" value="Internship"> Internship</label><label><input type="checkbox" name="job_types" value="Co-op"> Co-op</label><label><input type="checkbox" name="job_types" value="Part-time"> Part-time</label><label><input type="checkbox" name="job_types" value="Entry-level"> Entry-level</label><label><input type="checkbox" name="job_types" value="Fellowship"> Fellowship</label><label><input type="checkbox" name="job_types" value="Apprenticeship"> Apprenticeship</label><label><input type="checkbox" name="job_types" value="Research position"> Research position</label></div></fieldset>
+        <fieldset><legend>Work arrangement</legend><div class="choice-grid"><label><input type="checkbox" name="work_modes" value="On-site"> On-site</label><label><input type="checkbox" name="work_modes" value="Hybrid"> Hybrid</label><label><input type="checkbox" name="work_modes" value="Remote"> Remote</label></div></fieldset>
+        <label>Preferred locations <span class="label-help">Separate locations with commas</span><input name="preferred_locations" placeholder="Washington, DC, Baltimore, Remote"></label>
+        <button class="primary" type="submit">Save preferences and continue</button>
+      </form>
+      <p class="form-message" id="onboardingMessage" role="status"></p>
+    </section>
+
     <section class="auth-card hidden" id="workspace">
       <div class="workspace-heading">
-        <div><p class="eyebrow">SECURE WORKSPACE</p><h1>Your applications</h1></div>
-        <button id="signOut" class="secondary" type="button">Sign out</button>
+        <div><p class="eyebrow">PERSONALIZED FEED</p><h1>Recommended opportunities</h1></div>
+        <button class="secondary sign-out" type="button">Sign out</button>
       </div>
-      <form id="quickAdd" class="quick-add">
-        <label>Company<input name="company" required></label>
-        <label>Position<input name="role" required></label>
-        <label>Location<input name="location"></label>
-        <label>Status<select name="status"><option>Planning</option><option>Applied</option><option>Interviewing</option><option>Offer</option><option>Closed</option><option>Rejected</option><option>Withdrawn</option></select></label>
-        <button class="primary" type="submit">Add opportunity</button>
-      </form>
+      <div class="feed-toolbar"><p id="feedSummary">Based on your interests, education, and preferred locations.</p><button class="secondary" id="editPreferences" type="button">Edit preferences</button></div>
       <p class="form-message" id="workspaceMessage" role="status"></p>
       <div class="private-list" id="privateList"></div>
     </section>
@@ -52,6 +101,8 @@
       <p>The secure database exists, but the public frontend connection has not been added yet.</p>
     </section>
   </main>
+  <datalist id="majorOptions"><option value="Accounting"><option value="Biology"><option value="Business Administration"><option value="Chemistry"><option value="Communications"><option value="Computer Science"><option value="Economics"><option value="Education"><option value="Engineering"><option value="English"><option value="Finance"><option value="Health Sciences"><option value="Information Systems"><option value="International Relations"><option value="Management Information Systems"><option value="Marketing"><option value="Mathematics"><option value="Nursing"><option value="Political Science"><option value="Psychology"><option value="Public Health"><option value="Sociology"><option value="Supply Chain Management"></datalist>
+  <datalist id="minorOptions"><option value="Business Analytics"><option value="Computer Science"><option value="Data Science"><option value="Economics"><option value="Entrepreneurship"><option value="Finance"><option value="International Business"><option value="Marketing"><option value="Statistics"><option value="Sustainability"></datalist>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
   <script src="account.js"></script>
