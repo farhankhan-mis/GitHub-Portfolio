@@ -88,12 +88,16 @@
 
     <section class="auth-card hidden" id="workspace">
       <div class="workspace-heading">
-        <div><p class="eyebrow">PERSONALIZED FEED</p><h1>Recommended opportunities</h1></div>
+        <div><p class="eyebrow">INTERNSHIP WORKSPACE</p><h1 id="workspaceTitle">Dashboard</h1></div>
         <button class="secondary sign-out" type="button">Sign out</button>
       </div>
-      <div class="feed-toolbar"><p id="feedSummary">Based on your interests, education, and preferred locations.</p><button class="secondary" id="editPreferences" type="button">Edit preferences</button></div>
+      <nav class="workspace-nav" aria-label="Tracker sections"><button class="workspace-tab active" data-panel="overview" type="button">Overview</button><button class="workspace-tab" data-panel="discover" type="button">Discover</button><button class="workspace-tab" data-panel="tracker" type="button">My tracker</button><button class="workspace-tab" data-panel="archive" type="button">Archive</button><button class="workspace-tab" data-panel="networking" type="button">Networking</button></nav>
       <p class="form-message" id="workspaceMessage" role="status"></p>
-      <div class="private-list" id="privateList"></div>
+      <section class="workspace-panel active" id="overviewPanel"><div class="web-metrics" id="webMetrics"></div><h2>Next actions</h2><div class="private-list" id="nextActions"></div></section>
+      <section class="workspace-panel" id="discoverPanel"><div class="feed-toolbar"><p id="feedSummary">Based on your interests, education, and preferred locations.</p><button class="secondary" id="editPreferences" type="button">Edit preferences</button></div><div class="private-list" id="privateList"></div></section>
+      <section class="workspace-panel" id="trackerPanel"><div class="section-heading"><div><h2>Active opportunities</h2><p>Priority, verification, application status, résumé recommendation, deadlines, notes, and source details.</p></div></div><div class="private-list" id="trackerList"></div></section>
+      <section class="workspace-panel" id="archivePanel"><h2>Archive</h2><p>Rejected, withdrawn, closed, and expired opportunities remain here without distracting from active applications.</p><div class="private-list" id="archiveList"></div></section>
+      <section class="workspace-panel" id="networkingPanel"><h2>Networking</h2><p>Optional. Add contacts only after verifying their current company, title, and location. Never guess contact information.</p><div class="private-list" id="networkingList"><p>No verified contacts added.</p></div></section>
     </section>
 
     <section class="auth-card setup-card hidden" id="setupNotice">
