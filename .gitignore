@@ -11,8 +11,13 @@ backups/
 *_Working_Copy.xlsx
 *_Backup*.xlsx
 
-# Operating system files
+# Operating system and local inspection files
 .DS_Store
 Thumbs.db
 desktop.ini
 *.inspect.ndjson
+
+# Local environment secrets (the browser-safe config.js remains tracked)
+.env
+.env.*
+!.env.example

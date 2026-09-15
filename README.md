@@ -62,6 +62,19 @@ The Excel workbook does not search job boards by itself. Live posting updates re
 
 The web dashboard uses fictional demonstration records. Changes made there are saved only in your current browser; they do not sync with the Excel workbook or another device.
 
+## Account-enabled version (in progress)
+
+The next version adds email sign-in and cross-device syncing through Supabase.
+GitHub Pages remains the static frontend host; Supabase provides authentication
+and a Postgres database. The initial database design is in
+`supabase/schema.sql`, and its Row Level Security policies restrict every profile
+and application record to its owner.
+
+Setup requires a Supabase project URL and **publishable** key. Copy
+`config.example.js` to `config.js` only after the project is created. Never use a
+secret or `service_role` key in browser code. See `SECURITY.md` for the launch
+checklist.
+
 ## Development approach
 
 I defined the requirements, workflow rules, scoring model, status behavior, and privacy constraints. I then tested and refined the workbook through several iterations. OpenAI Codex and Claude were used as AI-assisted development tools for implementation support, formula design, research workflows, and quality checks.

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Private, cross-device internship application tracker">
+  <title>Internship Tracker — Sign in</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="account.css">
+</head>
+<body class="account-page">
+  <main class="auth-shell">
+    <section class="auth-card" id="authCard">
+      <div class="brand-mark">FK</div>
+      <p class="eyebrow">PRIVATE WORKSPACE</p>
+      <h1>Internship Tracker</h1>
+      <p class="auth-intro">Sign in to securely sync your applications across your laptop and phone.</p>
+
+      <div class="auth-tabs" role="tablist" aria-label="Account access">
+        <button class="auth-tab active" type="button" data-mode="signin">Sign in</button>
+        <button class="auth-tab" type="button" data-mode="signup">Create account</button>
+      </div>
+
+      <form id="authForm">
+        <label>Email<input id="email" type="email" autocomplete="email" required></label>
+        <label>Password<input id="password" type="password" minlength="8" autocomplete="current-password" required></label>
+        <button class="primary auth-submit" type="submit">Sign in</button>
+      </form>
+      <p class="form-message" id="authMessage" role="status"></p>
+      <p class="privacy-note">Your application data is private to your account. Never reuse your GitHub or email password here.</p>
+      <a href="index.html" class="demo-link">View the fictional portfolio demo</a>
+    </section>
+
+    <section class="auth-card hidden" id="workspace">
+      <div class="workspace-heading">
+        <div><p class="eyebrow">SECURE WORKSPACE</p><h1>Your applications</h1></div>
+        <button id="signOut" class="secondary" type="button">Sign out</button>
+      </div>
+      <form id="quickAdd" class="quick-add">
+        <label>Company<input name="company" required></label>
+        <label>Position<input name="role" required></label>
+        <label>Location<input name="location"></label>
+        <label>Status<select name="status"><option>Planning</option><option>Applied</option><option>Interviewing</option><option>Offer</option><option>Closed</option><option>Rejected</option><option>Withdrawn</option></select></label>
+        <button class="primary" type="submit">Add opportunity</button>
+      </form>
+      <p class="form-message" id="workspaceMessage" role="status"></p>
+      <div class="private-list" id="privateList"></div>
+    </section>
+
+    <section class="auth-card setup-card hidden" id="setupNotice">
+      <h1>Connection setup required</h1>
+      <p>The secure database exists, but the public frontend connection has not been added yet.</p>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="account.js"></script>
+</body>
+</html>
