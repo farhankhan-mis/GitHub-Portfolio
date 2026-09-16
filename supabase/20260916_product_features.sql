@@ -14,7 +14,7 @@ alter table public.opportunities_catalog add column if not exists first_seen_at 
 alter table public.opportunities_catalog add column if not exists updated_at timestamptz not null default now();
 alter table public.opportunities_catalog add column if not exists closed_at timestamptz;
 alter table public.opportunities_catalog add column if not exists canonical_key text;
-create unique index if not exists opportunities_catalog_canonical_key_idx on public.opportunities_catalog(canonical_key) where canonical_key is not null;
+create unique index if not exists opportunities_catalog_canonical_key_idx on public.opportunities_catalog(canonical_key);
 
 drop policy if exists "Signed-in users read active opportunities" on public.opportunities_catalog;
 drop policy if exists "Signed-in users read opportunity catalog" on public.opportunities_catalog;
@@ -89,4 +89,3 @@ drop trigger if exists touch_resumes_updated_at on public.resume_documents;
 create trigger touch_resumes_updated_at before update on public.resume_documents for each row execute function public.touch_updated_at();
 drop trigger if exists touch_feedback_updated_at on public.recommendation_feedback;
 create trigger touch_feedback_updated_at before update on public.recommendation_feedback for each row execute function public.touch_updated_at();
-
