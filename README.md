@@ -75,6 +75,18 @@ Setup requires a Supabase project URL and **publishable** key. Copy
 secret or `service_role` key in browser code. See `SECURITY.md` for the launch
 checklist.
 
+## Secure beta feature rollout
+
+Run `supabase/20260916_product_features.sql` after the earlier migrations. It adds private recommendation feedback, résumé-analysis metadata, notification preferences, closed-posting fields, editable tracker notes, and account-deletion support.
+
+Deploy `supabase/functions/delete-account/index.ts` as the `delete-account` Edge Function. Its service-role key stays in Supabase-managed function secrets and is never sent to the browser.
+
+Résumé parsing runs in the user's browser. The PDF goes directly to the user's private storage folder; extracted text and keywords are written only to the owner's RLS-protected résumé record. The matching score is a transparent keyword/category comparison, not a hiring decision.
+
+The scheduled catalog workflow requires encrypted GitHub Actions secrets named `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. It syncs the verified public `opportunities.json` catalog and never contains private user data.
+
+Before inviting outside users, configure custom SMTP, CAPTCHA, authentication rate limits, leaked-password protection, account deletion, two-account isolation testing, and a complete privacy and retention policy.
+
 ## Development approach
 
 I defined the requirements, workflow rules, scoring model, status behavior, and privacy constraints. I then tested and refined the workbook through several iterations. OpenAI Codex and Claude were used as AI-assisted development tools for implementation support, formula design, research workflows, and quality checks.

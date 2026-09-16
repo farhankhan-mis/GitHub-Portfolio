@@ -11,7 +11,15 @@ uses Supabase Auth and Postgres Row Level Security (RLS).
 - The browser receives only a Supabase publishable key.
 - A Supabase secret or `service_role` key must never appear in this repository,
   browser code, screenshots, or GitHub Pages settings.
-- Résumé files will use a private owner-only storage bucket in a later phase.
+- Résumé files use a private owner-only storage bucket. Extracted text remains in an owner-only RLS record.
+
+## Required production checks
+
+- Verify RLS with two unrelated test accounts before public launch.
+- Keep the service-role key only in Supabase function secrets or GitHub Actions encrypted secrets.
+- Enable CAPTCHA, authentication rate limits, leaked-password protection, and custom SMTP.
+- Test deletion of the authentication user, database rows, and private storage objects.
+- Do not use recommendation scores for employment decisions; they only organize opportunities for the user.
 
 ## Before launch
 
