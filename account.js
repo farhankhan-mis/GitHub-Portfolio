@@ -37,7 +37,7 @@
   }
   function populatePreferences(profile={}){initializePreferenceChoices(profile);const form=$('#onboardingForm'),set=(name,value)=>{const input=form.elements[name];if(input)input.value=value??''};set('in_school',String(Boolean(profile.in_school)));set('education_level',profile.education_level);set('school_name',profile.school_name);set('graduation_year',profile.graduation_year);set('majors',(profile.majors||[]).join(', '));set('minors',(profile.minors||[]).join(', '));set('custom_interests',(profile.custom_interests||[]).join(', '));set('preferred_locations',(profile.preferred_locations||[]).join(', '));$('#studentFields').classList.toggle('hidden',!profile.in_school);$$('input[name="work_modes"]').forEach(input=>input.checked=(profile.work_modes||[]).includes(input.value))}
   function catalogClassification(item){
-    const explicit=fieldAliases[item.field_key]||fieldAliases[item.industry]||item.field_key||item.industry;
+    const explicit=fieldAliases[item.field_key]||item.field_key||fieldAliases[item.industry]||item.industry;
     const exactField=Object.keys(taxonomy.fields).find(field=>normalize(field)===normalize(explicit));
     const text=normalize([item.role_key,item.role_family,item.category,item.role,item.industry,...(item.tags||[])].join(' '));
     let field=exactField||null,role=null;
