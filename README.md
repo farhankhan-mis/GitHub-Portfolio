@@ -2,6 +2,8 @@
 
 An interactive web dashboard and Excel workbook for organizing internship searches, prioritizing opportunities, and preserving application history.
 
+[View the public portfolio demo](https://farhankhan-mis.github.io/GitHub-Portfolio/) | [Open the secure account beta](https://farhankhan-mis.github.io/GitHub-Portfolio/account.html)
+
 The tracker is designed for students managing applications across several career areas. It combines an application pipeline, weighted prioritization, résumé recommendations, posting verification, duplicate detection, follow-up tracking, and archiving.
 
 All companies, links, dates, and application activity in this public demonstration are fictional.
@@ -60,15 +62,14 @@ The three personal-fit ratings are editable on a 1–5 scale. Formula-driven fie
 
 The Excel workbook does not search job boards by itself. Live posting updates require a separate scheduled workflow that researches openings, verifies links, checks duplicates, and safely updates the local file.
 
-The web dashboard uses fictional demonstration records. Changes made there are saved only in your current browser; they do not sync with the Excel workbook or another device.
+The public portfolio dashboard uses fictional demonstration records. The separate secure account beta supports authenticated, account-specific data and a verified public opportunity catalog. It does not expose the owner's personal Excel tracker or private application history.
 
-## Account-enabled version (in progress)
+## Secure account beta
 
-The next version adds email sign-in and cross-device syncing through Supabase.
+The account version uses email authentication and cross-device data through Supabase.
 GitHub Pages remains the static frontend host; Supabase provides authentication
-and a Postgres database. The initial database design is in
-`supabase/schema.sql`, and its Row Level Security policies restrict every profile
-and application record to its owner.
+and a Postgres database. The database design is in `supabase/schema.sql`, and its
+Row Level Security policies restrict every profile and application record to its owner.
 
 Setup requires a Supabase project URL and **publishable** key. Copy
 `config.example.js` to `config.js` only after the project is created. Never use a
