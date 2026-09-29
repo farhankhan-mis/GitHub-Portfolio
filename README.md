@@ -18,6 +18,8 @@ All companies, links, dates, and application activity in this public demonstrati
 
 - Job-discovery workspace with keyword, company, location, career-area, work-mode, and match filters
 - Split results-and-details experience that moves a selected role directly into the application workflow
+- Job-seeker profile with completeness, education, interests, locations, work modes, and private résumé summary
+- Account settings organized around sign-in security, notifications, private-data controls, and deletion
 - Weighted priority scoring based on location, company interest, role fit, résumé match, and deadline urgency
 - Automatic résumé recommendations based on career category
 - Status-based row colors for planning, applied, interviewing, offers, and terminal outcomes
