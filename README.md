@@ -16,6 +16,8 @@ All companies, links, dates, and application activity in this public demonstrati
 
 ## Main features
 
+- Job-discovery workspace with keyword, company, location, career-area, work-mode, and match filters
+- Split results-and-details experience that moves a selected role directly into the application workflow
 - Weighted priority scoring based on location, company interest, role fit, résumé match, and deadline urgency
 - Automatic résumé recommendations based on career category
 - Status-based row colors for planning, applied, interviewing, offers, and terminal outcomes

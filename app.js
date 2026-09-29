@@ -1,11 +1,11 @@
 function dateOffset(days){const value=new Date();value.setHours(12,0,0,0);value.setDate(value.getDate()+days);return value.toISOString().slice(0,10)}
 const seedApplications = [
-  {id:1,company:'Northstar Advisory',role:'Strategy Consulting Intern',location:'Washington, DC',area:'Consulting',score:92,status:'Planning',resume:'Consulting',deadline:dateOffset(8)},
-  {id:2,company:'Harborline Aerospace',role:'Data Analytics Intern',location:'Arlington, VA',area:'Data Analytics',score:89,status:'Applied',resume:'Data Analytics',deadline:dateOffset(13)},
-  {id:3,company:'Monument Financial',role:'Corporate Finance Intern',location:'Baltimore, MD',area:'Finance',score:85,status:'Interviewing',resume:'Finance',deadline:dateOffset(19)},
-  {id:4,company:'Pioneer Consumer Group',role:'Product Management Intern',location:'Chicago, IL',area:'Product Management',score:81,status:'Planning',resume:'Analyst',deadline:dateOffset(27)},
-  {id:5,company:'Blue Ridge Technologies',role:'Sales & Marketing Intern',location:'McLean, VA',area:'Sales & Marketing',score:78,status:'Applied',resume:'Sales / Marketing',deadline:dateOffset(35)},
-  {id:6,company:'Capital Transit Labs',role:'Business Operations Intern',location:'Remote, USA',area:'Operations',score:74,status:'Planning',resume:'Analyst',deadline:dateOffset(43)}
+  {id:1,company:'Northstar Advisory',role:'Strategy Consulting Intern',location:'Washington, DC',area:'Consulting',score:92,status:'Planning',resume:'Consulting',deadline:dateOffset(8),mode:'Hybrid',posted:1},
+  {id:2,company:'Harborline Aerospace',role:'Data Analytics Intern',location:'Arlington, VA',area:'Data Analytics',score:89,status:'Applied',resume:'Data Analytics',deadline:dateOffset(13),mode:'On-site',posted:2},
+  {id:3,company:'Monument Financial',role:'Corporate Finance Intern',location:'Baltimore, MD',area:'Finance',score:85,status:'Interviewing',resume:'Finance',deadline:dateOffset(19),mode:'Hybrid',posted:3},
+  {id:4,company:'Pioneer Consumer Group',role:'Product Management Intern',location:'Chicago, IL',area:'Product Management',score:81,status:'Planning',resume:'Analyst',deadline:dateOffset(27),mode:'Hybrid',posted:1},
+  {id:5,company:'Blue Ridge Technologies',role:'Sales & Marketing Intern',location:'McLean, VA',area:'Sales & Marketing',score:78,status:'Applied',resume:'Sales / Marketing',deadline:dateOffset(35),mode:'On-site',posted:4},
+  {id:6,company:'Capital Transit Labs',role:'Business Operations Intern',location:'Remote, USA',area:'Operations',score:74,status:'Planning',resume:'Analyst',deadline:dateOffset(43),mode:'Remote',posted:2}
 ];
 const archive = [
   {company:'Summit Partners Group',role:'Business Analyst Intern',area:'Consulting',status:'Closed',date:'Sep 8, 2026',notes:'Posting closed before application.'},
@@ -15,6 +15,7 @@ const statuses=['Planning','Applied','Interviewing','Offer','Closed'];
 const demoStorageKey='internship-demo-data-v2';
 let applications=JSON.parse(localStorage.getItem(demoStorageKey)||'null')||structuredClone(seedApplications);
 const $=s=>document.querySelector(s); const $$=s=>[...document.querySelectorAll(s)];
+let selectedJobId=applications[0]?.id;
 function save(){localStorage.setItem(demoStorageKey,JSON.stringify(applications));renderAll()}
 function resumeFor(area){return {Consulting:'Consulting','Data Analytics':'Data Analytics',Finance:'Finance','Sales & Marketing':'Sales / Marketing',Operations:'Analyst','Product Management':'Analyst'}[area]||'General'}
 function priority(score){return score>=85?'High':score>=75?'Medium':'Low'}
@@ -36,6 +37,9 @@ function renderDeadlines(){
  const upcoming=[...applications].filter(a=>a.status!=='Closed').sort((a,b)=>a.deadline.localeCompare(b.deadline)).slice(0,3);
  $('#deadlineList').innerHTML=upcoming.map(a=>{const d=new Date(a.deadline+'T12:00:00');return `<div class="deadline"><div class="date-box"><small>${d.toLocaleDateString('en-US',{month:'short'}).toUpperCase()}</small>${d.getDate()}</div><div><div class="company">${a.company}</div><div class="role">${a.role} · ${Math.max(0,daysUntil(a.deadline))} days left</div></div></div>`}).join('');
 }
+function jobDescription(a){return `${a.company} is seeking an intern to support ${a.area.toLowerCase()} projects, organize information, collaborate with team members, and communicate findings. This fictional posting demonstrates how verified responsibilities, qualifications, and source details appear before a user saves an opportunity.`}
+function filteredJobs(){const keyword=$('#jobKeyword').value.trim().toLowerCase(),location=$('#jobLocation').value.trim().toLowerCase(),area=$('#jobAreaFilter').value,mode=$('#jobModeFilter').value,minScore=Number($('#jobScoreFilter').value);return applications.filter(a=>(!keyword||[a.company,a.role,a.area].join(' ').toLowerCase().includes(keyword))&&(!location||a.location.toLowerCase().includes(location))&&(area==='All'||a.area===area)&&(mode==='All'||a.mode===mode)&&a.score>=minScore)}
+function renderDiscovery(){const jobs=filteredJobs();if(!jobs.some(job=>job.id===selectedJobId))selectedJobId=jobs[0]?.id;$('#jobResultCount').textContent=`${jobs.length} fictional ${jobs.length===1?'opportunity':'opportunities'} matched`;$('#jobResults').innerHTML=jobs.map(a=>`<button class="job-card ${a.id===selectedJobId?'selected':''}" data-job-id="${a.id}" type="button"><span class="job-card-top"><span class="company-logo">${a.company.slice(0,1)}</span><span><strong>${a.role}</strong><small>${a.company}</small></span></span><span class="job-meta">${a.location} · ${a.mode}</span><span class="job-tags"><em>${a.score}% match</em><em>${a.area}</em></span><span class="job-posted">Posted ${a.posted} ${a.posted===1?'day':'days'} ago · Fictional demo</span></button>`).join('')||'<div class="empty-state"><strong>No exact matches.</strong><p>Change a filter or broaden your search.</p></div>';const a=jobs.find(job=>job.id===selectedJobId);$('#jobDetail').innerHTML=a?`<div class="job-detail-head"><div><p class="eyebrow">FICTIONAL VERIFIED DEMO</p><h2>${a.role}</h2><p>${a.company} · ${a.location} · ${a.mode}</p></div><span class="match-badge">${a.score}% match</span></div><div class="job-detail-actions"><button class="primary" id="viewTrackerJob" type="button">View in tracker</button><button class="secondary" id="saveDemoJob" type="button">Save job</button></div><div class="job-facts"><div><b>Recommended résumé</b><span>${a.resume}</span></div><div><b>Application status</b><span>${a.status}</span></div><div><b>Deadline</b><span>${new Date(a.deadline+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</span></div><div><b>Verification</b><span>Portfolio demonstration</span></div></div><h3>About the role</h3><p>${jobDescription(a)}</p><h3>Why it matches</h3><ul><li>Career-area alignment: ${a.area}</li><li>Location and work-mode fit</li><li>Recommended ${a.resume} résumé</li><li>Priority score based on the tracker model</li></ul><p class="detail-note">Real catalog records link to the employer's official application page after verification.</p>`:'<div class="empty-state"><strong>Select another search.</strong></div>';$$('.job-card').forEach(card=>card.addEventListener('click',()=>{selectedJobId=Number(card.dataset.jobId);renderDiscovery()}));$('#viewTrackerJob')?.addEventListener('click',()=>showView('applications'));$('#saveDemoJob')?.addEventListener('click',e=>{e.currentTarget.textContent='Saved to tracker';e.currentTarget.disabled=true})}
 function populateFilters(){
  const currentStatus=$('#statusFilter').value,currentArea=$('#areaFilter').value;
  $('#statusFilter').innerHTML='<option value="All">All statuses</option>'+statuses.map(s=>`<option>${s}</option>`).join('');
@@ -53,10 +57,15 @@ function renderArchive(){
  $('#archiveBody').innerHTML=archive.map(a=>`<tr><td><div class="company">${a.company}</div><div class="role">${a.role}</div></td><td>${a.area}</td><td><span class="status-select status-closed">${a.status}</span></td><td>${a.date}</td><td>${a.notes}</td></tr>`).join('');
 }
 function renderAll(){populateFilters();renderMetrics();renderPriority();renderPipeline();renderDeadlines();renderApplications();renderArchive();$('#navActiveCount').textContent=applications.length;$('#navArchiveCount').textContent=archive.length}
-function showView(name){$$('.view').forEach(v=>v.classList.remove('active'));$$('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===name));$('#'+name+'View').classList.add('active');$('#pageTitle').textContent={dashboard:'Overview',applications:'Applications',archive:'Archive',methodology:'Methodology & controls'}[name]}
+function showView(name){$$('.view').forEach(v=>v.classList.remove('active'));$$('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===name));$('#'+name+'View').classList.add('active');$('#pageTitle').textContent={discovery:'Find jobs',dashboard:'My dashboard',applications:'My tracker',archive:'Archive',methodology:'Methodology & controls'}[name]}
 $$('.nav-item').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));$$('[data-go]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.go)));
 ['searchInput','statusFilter','areaFilter'].forEach(id=>$('#'+id).addEventListener(id==='searchInput'?'input':'change',renderApplications));
+['jobKeyword','jobLocation'].forEach(id=>$('#'+id).addEventListener('input',renderDiscovery));
+['jobAreaFilter','jobModeFilter','jobScoreFilter'].forEach(id=>$('#'+id).addEventListener('change',renderDiscovery));
+$('#jobSearchButton').addEventListener('click',renderDiscovery);
 $('#addButton').addEventListener('click',()=>$('#addDialog').showModal());
 $('#saveOpportunity').addEventListener('click',e=>{if(!$('#addForm').reportValidity()){e.preventDefault();return}const data=new FormData($('#addForm'));const fit=Number(data.get('fit'));applications.push({id:Date.now(),company:data.get('company'),role:data.get('role'),location:data.get('location'),area:data.get('area'),score:55+fit*8,status:'Planning',resume:resumeFor(data.get('area')),deadline:data.get('deadline')});$('#addForm').reset();save();showView('applications')});
 $('#resetDemo').addEventListener('click',()=>{applications=structuredClone(seedApplications);localStorage.removeItem(demoStorageKey);renderAll()});
 renderAll();
+$('#jobAreaFilter').innerHTML='<option value="All">All areas</option>'+[...new Set(applications.map(a=>a.area))].sort().map(area=>`<option>${area}</option>`).join('');
+renderDiscovery();

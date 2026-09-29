@@ -12,8 +12,9 @@
     <aside class="sidebar">
       <div class="brand"><span class="brand-mark">FK</span><div><strong>Internship Tracker</strong><small>Portfolio demo</small></div></div>
       <nav aria-label="Dashboard sections">
-        <button class="nav-item active" data-view="dashboard">Overview</button>
-        <button class="nav-item" data-view="applications">Applications <span id="navActiveCount">0</span></button>
+        <button class="nav-item active" data-view="discovery">Find jobs</button>
+        <button class="nav-item" data-view="dashboard">My dashboard</button>
+        <button class="nav-item" data-view="applications">My tracker <span id="navActiveCount">0</span></button>
         <button class="nav-item" data-view="archive">Archive <span id="navArchiveCount">0</span></button>
         <button class="nav-item" data-view="methodology">Methodology</button>
       </nav>
@@ -24,11 +25,32 @@
 
     <main>
       <header class="topbar">
-        <div><p class="eyebrow">APPLICATION WORKSPACE</p><h1 id="pageTitle">Overview</h1></div>
+        <div><p class="eyebrow">PERSONAL OPPORTUNITY PLATFORM</p><h1 id="pageTitle">Find jobs</h1></div>
         <button class="primary" id="addButton">+ Add opportunity</button>
       </header>
 
-      <section id="dashboardView" class="view active">
+      <section id="discoveryView" class="view active">
+        <section class="search-hero">
+          <div><p class="eyebrow">SEARCH VERIFIED OPPORTUNITIES</p><h2>Find work that fits your goals</h2><p>Search the fictional portfolio catalog by role, company, and location.</p></div>
+          <div class="job-search-bar">
+            <label><span>What</span><input id="jobKeyword" type="search" placeholder="Job title, skill, or company"></label>
+            <label><span>Where</span><input id="jobLocation" type="search" placeholder="City, state, or remote"></label>
+            <button class="primary" id="jobSearchButton" type="button">Search jobs</button>
+          </div>
+          <div class="filter-row">
+            <label>Career area<select id="jobAreaFilter"><option value="All">All areas</option></select></label>
+            <label>Work mode<select id="jobModeFilter"><option value="All">All work modes</option><option>On-site</option><option>Hybrid</option><option>Remote</option></select></label>
+            <label>Minimum match<select id="jobScoreFilter"><option value="0">Any match</option><option value="75">75+</option><option value="85">85+</option></select></label>
+          </div>
+        </section>
+        <p class="search-summary" id="jobResultCount"></p>
+        <div class="job-search-layout">
+          <section class="job-results" id="jobResults" aria-label="Job search results"></section>
+          <section class="panel job-detail" id="jobDetail" aria-live="polite"></section>
+        </div>
+      </section>
+
+      <section id="dashboardView" class="view">
         <div class="metric-grid" id="metricGrid"></div>
         <div class="dashboard-grid">
           <section class="panel focus-panel">
