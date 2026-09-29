@@ -62,14 +62,28 @@ The three personal-fit ratings are editable on a 1–5 scale. Formula-driven fie
 
 The Excel workbook does not search job boards by itself. Live posting updates require a separate scheduled workflow that researches openings, verifies links, checks duplicates, and safely updates the local file.
 
-The public portfolio dashboard uses fictional demonstration records. The separate secure account beta supports authenticated, account-specific data and a verified public opportunity catalog. It does not expose the owner's personal Excel tracker or private application history.
+The public portfolio dashboard uses fictional demonstration records. The separate account beta supports authenticated, account-specific data and a verified public opportunity catalog. It does not expose the owner's personal Excel tracker or private application history.
+
+## Architecture
+
+| Component | Technology | Responsibility |
+| --- | --- | --- |
+| Portfolio demo | HTML, CSS, JavaScript | Demonstrates the workflow with fictional data stored in the browser. |
+| Account workspace | JavaScript and Supabase Auth | Handles sign-in and account-specific interactions. |
+| Private data | Supabase PostgreSQL | Stores profiles, applications, preferences, and résumé metadata. |
+| Access controls | PostgreSQL Row Level Security | Restricts private rows and files to their authenticated owner. |
+| Catalog builder | Python and `openpyxl` | Reads approved workbook rows and produces the public JSON catalog. |
+| Excel prototype | Tables, formulas, validation, and conditional formatting | Supports the original personal workflow and prioritization model. |
+
+Python does not run in the browser, and the Excel workbook does not execute Python or SQL. Python is an external data-transformation step. SQL defines the database schema and access policies used by the account beta.
 
 ## Secure account beta
 
-The account version uses email authentication and cross-device data through Supabase.
+The account version uses email sign-in and cross-device syncing through Supabase.
 GitHub Pages remains the static frontend host; Supabase provides authentication
-and a Postgres database. The database design is in `supabase/schema.sql`, and its
-Row Level Security policies restrict every profile and application record to its owner.
+and a Postgres database. The initial database design is in
+`supabase/schema.sql`, and its Row Level Security policies restrict every profile
+and application record to its owner.
 
 Setup requires a Supabase project URL and **publishable** key. Copy
 `config.example.js` to `config.js` only after the project is created. Never use a
@@ -92,10 +106,22 @@ Before inviting outside users, configure custom SMTP, CAPTCHA, authentication ra
 
 I defined the requirements, workflow rules, scoring model, status behavior, and privacy constraints. I then tested and refined the workbook through several iterations. OpenAI Codex and Claude were used as AI-assisted development tools for implementation support, formula design, research workflows, and quality checks.
 
+## Controls and limitations
+
+- Required fields and controlled status values improve consistency.
+- Duplicate checks reduce repeated records.
+- Source links and verification dates support review of posting accuracy.
+- Archive rules preserve history instead of deleting terminal outcomes.
+- Public demonstration data is separated from private account data.
+- Posting verification still requires human review; this is not a claim of autonomous real-time scraping.
+- The account workspace is a beta and is not represented as security-certified production software.
+
 ## Skills demonstrated
 
 - Microsoft Excel
 - HTML, CSS, and JavaScript
+- Python data transformation with `openpyxl` and JSON
+- PostgreSQL schema design and Row Level Security policies
 - Spreadsheet formulas and conditional formatting
 - Data validation and structured tables
 - Requirements gathering

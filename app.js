@@ -1,19 +1,21 @@
+function dateOffset(days){const value=new Date();value.setHours(12,0,0,0);value.setDate(value.getDate()+days);return value.toISOString().slice(0,10)}
 const seedApplications = [
-  {id:1,company:'Northstar Advisory',role:'Strategy Consulting Intern',location:'Washington, DC',area:'Consulting',score:92,status:'Planning',resume:'Consulting',deadline:'2026-09-20'},
-  {id:2,company:'Harborline Aerospace',role:'Data Analytics Intern',location:'Arlington, VA',area:'Data Analytics',score:89,status:'Applied',resume:'Data Analytics',deadline:'2026-09-24'},
-  {id:3,company:'Monument Financial',role:'Corporate Finance Intern',location:'Baltimore, MD',area:'Finance',score:85,status:'Interviewing',resume:'Finance',deadline:'2026-09-28'},
-  {id:4,company:'Pioneer Consumer Group',role:'Product Management Intern',location:'Chicago, IL',area:'Product Management',score:81,status:'Planning',resume:'Analyst',deadline:'2026-10-04'},
-  {id:5,company:'Blue Ridge Technologies',role:'Sales & Marketing Intern',location:'McLean, VA',area:'Sales & Marketing',score:78,status:'Applied',resume:'Sales / Marketing',deadline:'2026-10-12'},
-  {id:6,company:'Capital Transit Labs',role:'Business Operations Intern',location:'Remote, USA',area:'Operations',score:74,status:'Planning',resume:'Analyst',deadline:'2026-10-18'}
+  {id:1,company:'Northstar Advisory',role:'Strategy Consulting Intern',location:'Washington, DC',area:'Consulting',score:92,status:'Planning',resume:'Consulting',deadline:dateOffset(8)},
+  {id:2,company:'Harborline Aerospace',role:'Data Analytics Intern',location:'Arlington, VA',area:'Data Analytics',score:89,status:'Applied',resume:'Data Analytics',deadline:dateOffset(13)},
+  {id:3,company:'Monument Financial',role:'Corporate Finance Intern',location:'Baltimore, MD',area:'Finance',score:85,status:'Interviewing',resume:'Finance',deadline:dateOffset(19)},
+  {id:4,company:'Pioneer Consumer Group',role:'Product Management Intern',location:'Chicago, IL',area:'Product Management',score:81,status:'Planning',resume:'Analyst',deadline:dateOffset(27)},
+  {id:5,company:'Blue Ridge Technologies',role:'Sales & Marketing Intern',location:'McLean, VA',area:'Sales & Marketing',score:78,status:'Applied',resume:'Sales / Marketing',deadline:dateOffset(35)},
+  {id:6,company:'Capital Transit Labs',role:'Business Operations Intern',location:'Remote, USA',area:'Operations',score:74,status:'Planning',resume:'Analyst',deadline:dateOffset(43)}
 ];
 const archive = [
   {company:'Summit Partners Group',role:'Business Analyst Intern',area:'Consulting',status:'Closed',date:'Sep 8, 2026',notes:'Posting closed before application.'},
   {company:'Atlantic Retail Co.',role:'Merchandising Intern',area:'Sales & Marketing',status:'Rejected',date:'Sep 2, 2026',notes:'Application history retained for reference.'}
 ];
 const statuses=['Planning','Applied','Interviewing','Offer','Closed'];
-let applications=JSON.parse(localStorage.getItem('internship-demo-data')||'null')||structuredClone(seedApplications);
+const demoStorageKey='internship-demo-data-v2';
+let applications=JSON.parse(localStorage.getItem(demoStorageKey)||'null')||structuredClone(seedApplications);
 const $=s=>document.querySelector(s); const $$=s=>[...document.querySelectorAll(s)];
-function save(){localStorage.setItem('internship-demo-data',JSON.stringify(applications));renderAll()}
+function save(){localStorage.setItem(demoStorageKey,JSON.stringify(applications));renderAll()}
 function resumeFor(area){return {Consulting:'Consulting','Data Analytics':'Data Analytics',Finance:'Finance','Sales & Marketing':'Sales / Marketing',Operations:'Analyst','Product Management':'Analyst'}[area]||'General'}
 function priority(score){return score>=85?'High':score>=75?'Medium':'Low'}
 function statusClass(s){return `status-${s.toLowerCase()}`}
@@ -51,10 +53,10 @@ function renderArchive(){
  $('#archiveBody').innerHTML=archive.map(a=>`<tr><td><div class="company">${a.company}</div><div class="role">${a.role}</div></td><td>${a.area}</td><td><span class="status-select status-closed">${a.status}</span></td><td>${a.date}</td><td>${a.notes}</td></tr>`).join('');
 }
 function renderAll(){populateFilters();renderMetrics();renderPriority();renderPipeline();renderDeadlines();renderApplications();renderArchive();$('#navActiveCount').textContent=applications.length;$('#navArchiveCount').textContent=archive.length}
-function showView(name){$$('.view').forEach(v=>v.classList.remove('active'));$$('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===name));$('#'+name+'View').classList.add('active');$('#pageTitle').textContent={dashboard:'Overview',applications:'Applications',archive:'Archive'}[name]}
+function showView(name){$$('.view').forEach(v=>v.classList.remove('active'));$$('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===name));$('#'+name+'View').classList.add('active');$('#pageTitle').textContent={dashboard:'Overview',applications:'Applications',archive:'Archive',methodology:'Methodology & controls'}[name]}
 $$('.nav-item').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));$$('[data-go]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.go)));
 ['searchInput','statusFilter','areaFilter'].forEach(id=>$('#'+id).addEventListener(id==='searchInput'?'input':'change',renderApplications));
 $('#addButton').addEventListener('click',()=>$('#addDialog').showModal());
 $('#saveOpportunity').addEventListener('click',e=>{if(!$('#addForm').reportValidity()){e.preventDefault();return}const data=new FormData($('#addForm'));const fit=Number(data.get('fit'));applications.push({id:Date.now(),company:data.get('company'),role:data.get('role'),location:data.get('location'),area:data.get('area'),score:55+fit*8,status:'Planning',resume:resumeFor(data.get('area')),deadline:data.get('deadline')});$('#addForm').reset();save();showView('applications')});
-$('#resetDemo').addEventListener('click',()=>{applications=structuredClone(seedApplications);localStorage.removeItem('internship-demo-data');renderAll()});
+$('#resetDemo').addEventListener('click',()=>{applications=structuredClone(seedApplications);localStorage.removeItem(demoStorageKey);renderAll()});
 renderAll();

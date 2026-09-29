@@ -15,6 +15,7 @@
         <button class="nav-item active" data-view="dashboard">Overview</button>
         <button class="nav-item" data-view="applications">Applications <span id="navActiveCount">0</span></button>
         <button class="nav-item" data-view="archive">Archive <span id="navArchiveCount">0</span></button>
+        <button class="nav-item" data-view="methodology">Methodology</button>
       </nav>
       <div class="sidebar-note"><strong>Privacy-safe demo</strong><p>Every company and application shown here is fictional.</p></div>
       <a class="download-link" href="account.html">Open secure account beta</a>
@@ -65,6 +66,31 @@
           <div class="panel-heading"><div><p class="eyebrow">APPLICATION HISTORY</p><h2>Archived opportunities</h2></div></div>
           <div class="table-wrap"><table><thead><tr><th>Company & role</th><th>Career area</th><th>Final status</th><th>Date updated</th><th>Notes</th></tr></thead><tbody id="archiveBody"></tbody></table></div>
         </section>
+      </section>
+
+      <section id="methodologyView" class="view">
+        <div class="method-grid">
+          <section class="panel method-card">
+            <p class="eyebrow">PROBLEM AND APPROACH</p>
+            <h2>From spreadsheet workflow to a web application</h2>
+            <p>I started with an Excel tracker to make a fragmented internship search easier to manage. I then translated the workflow into a browser-based dashboard with a public fictional demo and a separate authenticated workspace.</p>
+          </section>
+          <section class="panel method-card">
+            <p class="eyebrow">DATA QUALITY CONTROLS</p>
+            <h2>Designed to reduce avoidable errors</h2>
+            <ul><li>Required fields and controlled status values</li><li>Duplicate checks before records are added</li><li>Source-link and last-verified fields</li><li>Archive rules that preserve history</li><li>Human review before a posting is treated as current</li></ul>
+          </section>
+          <section class="panel method-card">
+            <p class="eyebrow">TECHNICAL ARCHITECTURE</p>
+            <h2>Simple components with clear responsibilities</h2>
+            <dl><div><dt>Frontend</dt><dd>HTML, CSS, and JavaScript</dd></div><div><dt>Private accounts</dt><dd>Supabase Auth and PostgreSQL</dd></div><div><dt>Access control</dt><dd>Row Level Security policies tied to each user</dd></div><div><dt>Catalog pipeline</dt><dd>Python converts approved workbook records into public JSON</dd></div><div><dt>Prototype</dt><dd>Excel tables, formulas, validation, and conditional formatting</dd></div></dl>
+          </section>
+          <section class="panel method-card">
+            <p class="eyebrow">LIMITATIONS AND OWNERSHIP</p>
+            <h2>What this project does—and does not—claim</h2>
+            <p>The demo uses fictional data and browser storage. The account workspace is a beta, not a claim of production certification or fully autonomous real-time job scraping. I defined the requirements, rules, and privacy boundaries; used AI-assisted coding tools; and reviewed, tested, and refined the implementation.</p>
+          </section>
+        </div>
       </section>
     </main>
   </div>
