@@ -2,136 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A privacy-safe internship application management dashboard with fictional demonstration data.">
-  <title>Internship Application Dashboard</title>
-  <link rel="stylesheet" href="styles.css?v=4">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A privacy-safe catalog of public internships and early-career opportunities, with source and verification details.">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
+  <title>Public Opportunity Catalog</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <div class="brand"><span class="brand-mark">FK</span><div><strong>Internship Tracker</strong><small>Portfolio demo</small></div></div>
-      <nav aria-label="Dashboard sections">
-        <button class="nav-item active" data-view="discovery">Find jobs</button>
-        <button class="nav-item" data-view="dashboard">My dashboard</button>
-        <button class="nav-item" data-view="applications">My tracker <span id="navActiveCount">0</span></button>
-        <button class="nav-item" data-view="archive">Archive <span id="navArchiveCount">0</span></button>
-        <button class="nav-item" data-view="methodology">Methodology</button>
-      </nav>
-      <div class="sidebar-note"><strong>Privacy-safe demo</strong><p>Every company and application shown here is fictional.</p></div>
-      <a class="download-link" href="account.html">Open secure account beta</a>
-      <a class="download-link" href="Internship_Application_Management_System.xlsx" download>Download Excel version</a>
-    </aside>
-
-    <main>
-      <header class="topbar">
-        <div><p class="eyebrow">PERSONAL OPPORTUNITY PLATFORM</p><h1 id="pageTitle">Find jobs</h1></div>
-        <button class="primary" id="addButton">+ Add opportunity</button>
-      </header>
-
-      <section id="discoveryView" class="view active">
-        <section class="search-hero">
-          <div><p class="eyebrow">SEARCH VERIFIED OPPORTUNITIES</p><h2>Find work that fits your goals</h2><p>Search the fictional portfolio catalog by role, company, and location.</p></div>
-          <div class="job-search-bar">
-            <label><span>What</span><input id="jobKeyword" type="search" placeholder="Job title, skill, or company"></label>
-            <label><span>Where</span><input id="jobLocation" type="search" placeholder="City, state, or remote"></label>
-            <button class="primary" id="jobSearchButton" type="button">Search jobs</button>
-          </div>
-          <div class="filter-row">
-            <label>Career area<select id="jobAreaFilter"><option value="All">All areas</option></select></label>
-            <label>Work mode<select id="jobModeFilter"><option value="All">All work modes</option><option>On-site</option><option>Hybrid</option><option>Remote</option></select></label>
-            <label>Minimum match<select id="jobScoreFilter"><option value="0">Any match</option><option value="75">75+</option><option value="85">85+</option></select></label>
-          </div>
-        </section>
-        <p class="search-summary" id="jobResultCount"></p>
-        <div class="job-search-layout">
-          <section class="job-results" id="jobResults" aria-label="Job search results"></section>
-          <section class="panel job-detail" id="jobDetail" aria-live="polite"></section>
-        </div>
-      </section>
-
-      <section id="dashboardView" class="view">
-        <div class="metric-grid" id="metricGrid"></div>
-        <div class="dashboard-grid">
-          <section class="panel focus-panel">
-            <div class="panel-heading"><div><p class="eyebrow">TODAY'S FOCUS</p><h2>Highest-priority opportunities</h2></div><button class="text-button" data-go="applications">View all</button></div>
-            <div id="priorityList" class="priority-list"></div>
-          </section>
-          <section class="panel pipeline-panel">
-            <div class="panel-heading"><div><p class="eyebrow">PIPELINE</p><h2>Application status</h2></div></div>
-            <div id="pipelineChart" class="pipeline-chart"></div>
-          </section>
-          <section class="panel activity-panel">
-            <div class="panel-heading"><div><p class="eyebrow">NEXT STEPS</p><h2>Upcoming deadlines</h2></div></div>
-            <div id="deadlineList"></div>
-          </section>
-        </div>
-      </section>
-
-      <section id="applicationsView" class="view">
-        <section class="panel table-panel">
-          <div class="toolbar">
-            <label class="search"><span>Search</span><input id="searchInput" type="search" placeholder="Company, role, or location"></label>
-            <label>Status<select id="statusFilter"><option value="All">All statuses</option></select></label>
-            <label>Career area<select id="areaFilter"><option value="All">All areas</option></select></label>
-            <button class="secondary" id="resetDemo">Reset demo data</button>
-          </div>
-          <div class="table-wrap">
-            <table><thead><tr><th>Company & role</th><th>Location</th><th>Priority</th><th>Status</th><th>Recommended résumé</th><th>Deadline</th></tr></thead><tbody id="applicationsBody"></tbody></table>
-          </div>
-          <p class="table-note" id="resultCount"></p>
-        </section>
-      </section>
-
-      <section id="archiveView" class="view">
-        <section class="panel table-panel">
-          <div class="panel-heading"><div><p class="eyebrow">APPLICATION HISTORY</p><h2>Archived opportunities</h2></div></div>
-          <div class="table-wrap"><table><thead><tr><th>Company & role</th><th>Career area</th><th>Final status</th><th>Date updated</th><th>Notes</th></tr></thead><tbody id="archiveBody"></tbody></table></div>
-        </section>
-      </section>
-
-      <section id="methodologyView" class="view">
-        <div class="method-grid">
-          <section class="panel method-card">
-            <p class="eyebrow">PROBLEM AND APPROACH</p>
-            <h2>From spreadsheet workflow to a web application</h2>
-            <p>I started with an Excel tracker to make a fragmented internship search easier to manage. I then translated the workflow into a browser-based dashboard with a public fictional demo and a separate authenticated workspace.</p>
-          </section>
-          <section class="panel method-card">
-            <p class="eyebrow">DATA QUALITY CONTROLS</p>
-            <h2>Designed to reduce avoidable errors</h2>
-            <ul><li>Required fields and controlled status values</li><li>Duplicate checks before records are added</li><li>Source-link and last-verified fields</li><li>Archive rules that preserve history</li><li>Human review before a posting is treated as current</li></ul>
-          </section>
-          <section class="panel method-card">
-            <p class="eyebrow">TECHNICAL ARCHITECTURE</p>
-            <h2>Simple components with clear responsibilities</h2>
-            <dl><div><dt>Frontend</dt><dd>HTML, CSS, and JavaScript</dd></div><div><dt>Private accounts</dt><dd>Supabase Auth and PostgreSQL</dd></div><div><dt>Access control</dt><dd>Row Level Security policies tied to each user</dd></div><div><dt>Catalog pipeline</dt><dd>Python converts approved workbook records into public JSON</dd></div><div><dt>Prototype</dt><dd>Excel tables, formulas, validation, and conditional formatting</dd></div></dl>
-          </section>
-          <section class="panel method-card">
-            <p class="eyebrow">LIMITATIONS AND OWNERSHIP</p>
-            <h2>What this project does—and does not—claim</h2>
-            <p>The demo uses fictional data and browser storage. The account workspace is a beta, not a claim of production certification or fully autonomous real-time job scraping. I defined the requirements, rules, and privacy boundaries; used AI-assisted coding tools; and reviewed, tested, and refined the implementation.</p>
-          </section>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <dialog id="addDialog">
-    <form method="dialog" id="addForm">
-      <div class="dialog-heading"><div><p class="eyebrow">NEW RECORD</p><h2>Add an opportunity</h2></div><button class="icon-button" value="cancel" aria-label="Close">×</button></div>
-      <div class="form-grid">
-        <label>Company<input name="company" required placeholder="Example Company"></label>
-        <label>Role<input name="role" required placeholder="Business Analyst Intern"></label>
-        <label>Location<input name="location" required placeholder="Washington, DC"></label>
-        <label>Career area<select name="area" required><option>Consulting</option><option>Data Analytics</option><option>Finance</option><option>Sales & Marketing</option><option>Operations</option><option>Product Management</option></select></label>
-        <label>Deadline<input name="deadline" type="date" required></label>
-        <label>Fit score (1–5)<input name="fit" type="number" min="1" max="5" value="4" required></label>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="Public Opportunity Catalog home"><span class="brand-mark">OC</span><span><strong>Opportunity Catalog</strong><small>Public sources only</small></span></a>
+    <a class="repo-link" href="https://github.com/farhankhan-mis/GitHub-Portfolio" target="_blank" rel="noopener noreferrer">View source</a>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div><p class="eyebrow">PUBLIC OPPORTUNITY DIRECTORY</p><h1 id="page-title">Find an opportunity worth pursuing.</h1><p>Search public listings by role, field, location, and work mode. Every record shows its source and verification status.</p></div>
+      <div class="catalog-health" id="catalogHealth" aria-live="polite"><span>Loading catalog…</span></div>
+    </section>
+    <section class="notice" id="freshnessNotice" hidden aria-live="polite"></section>
+    <section class="workspace">
+      <form class="filters" id="filters" role="search">
+        <label class="wide">Search<input id="query" type="search" placeholder="Company, role, keyword, or city" autocomplete="off"></label>
+        <label>Field<select id="field"><option value="">All fields</option></select></label>
+        <label>Work mode<select id="mode"><option value="">All work modes</option></select></label>
+        <label>Status<select id="status"><option value="">All statuses</option></select></label>
+        <button id="clearFilters" type="button">Clear filters</button>
+      </form>
+      <div class="results-heading"><p id="resultSummary" aria-live="polite">Loading opportunities…</p><label class="sort-label">Sort<select id="sort"><option value="verified">Recently verified</option><option value="deadline">Deadline</option><option value="company">Company</option></select></label></div>
+      <div class="catalog-layout">
+        <div class="results" id="results" aria-label="Opportunity results"></div>
+        <aside class="detail" id="detail" aria-label="Selected opportunity details"><p class="empty">Select an opportunity to view its details.</p></aside>
       </div>
-      <p class="form-note">This demonstration stores changes only in this browser.</p>
-      <div class="dialog-actions"><button value="cancel" class="secondary">Cancel</button><button value="default" class="primary" id="saveOpportunity">Add opportunity</button></div>
-    </form>
-  </dialog>
-  <script src="app.js?v=3"></script>
+    </section>
+    <section class="standards" aria-labelledby="standards-title">
+      <div><p class="eyebrow">CATALOG STANDARD</p><h2 id="standards-title">Transparent by design</h2></div>
+      <div class="standard-grid"><article><strong>Public sources only</strong><p>No private tracker, application history, résumé, notes, contacts, or account data are used.</p></article><article><strong>Freshness is visible</strong><p>Old or expired records remain clearly labeled until they are reverified or closed.</p></article><article><strong>Official links preferred</strong><p>Employer application pages take priority over aggregators and reposts.</p></article></div>
+    </section>
+  </main>
+  <footer><p>Opportunity information can change without notice. Confirm details on the employer’s official page before applying.</p><nav><a href="PRIVACY.md">Privacy</a><a href="SECURITY.md">Security</a></nav></footer>
+  <noscript>This catalog requires JavaScript to load and filter its public data.</noscript>
+  <script src="app.js?v=6" defer></script>
 </body>
 </html>

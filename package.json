@@ -1,0 +1,1 @@
+{"name":"public-opportunity-catalog","private":true,"type":"module","scripts":{"normalize":"node scripts/normalize_catalog.mjs","validate":"node scripts/validate_catalog.mjs","audit":"node scripts/audit_catalog.mjs","test":"node --check app.js && node --check taxonomy.js && node scripts/validate_catalog.mjs"}}
