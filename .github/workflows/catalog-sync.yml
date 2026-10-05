@@ -1,4 +1,4 @@
-name: Sync opportunity catalog
+name: Validate and sync public catalog
 on:
   workflow_dispatch:
   schedule:
@@ -6,14 +6,20 @@ on:
 permissions:
   contents: read
 jobs:
-  sync:
+  validate-and-sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Sync public catalog to Supabase
+      - name: Validate public-only catalog
+        run: npm test
+      - name: Audit freshness
+        run: npm run audit
+      - name: Sync public catalog mirror
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
