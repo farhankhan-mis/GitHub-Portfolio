@@ -80,6 +80,7 @@ function renderDetail(record) {
   const tracking = trackingFor(record);
   panel.replaceChildren();
   panel.append(
+    el('button', { className: 'detail-close', type: 'button', 'aria-label': 'Close opportunity details', text: '×' }),
     el('div', { className: 'detail-head' }, [el('div', {}, [el('p', { className: 'eyebrow', text: effectiveStatus(record).toUpperCase() }), el('h2', { text: record.role || 'Untitled opportunity' }), el('p', { text: `${record.company || 'Unknown company'} · ${record.location || 'Location not listed'}` })]), el('span', { className: `status ${statusClass(record)}`, text: effectiveStatus(record) })]),
     el('div', { className: 'detail-actions' }),
     el('dl', { className: 'facts' }, [fact('Field', record.field_key), fact('Role family', record.role_key || record.role_family), fact('Opportunity type', record.opportunity_type), fact('Work mode', record.work_mode), fact('Term', record.term), fact('Deadline', dateLabel(record.deadline)), fact('Last verified', dateLabel(record.last_verified)), fact('Source type', record.link_type || record.source)]),
@@ -112,6 +113,9 @@ function renderDetail(record) {
     tracker.append(el('div', { className: 'editor-title' }, [el('div', {}, [el('p', { className: 'eyebrow', text: 'PRIVATE · THIS BROWSER ONLY' }), el('h3', { text: 'My application tracker' })]), el('span', { className: 'tracking-badge', text: tracking.status })]), el('label', {}, [el('span', { text: 'Application status' }), statusSelect]), el('label', {}, [el('span', { text: 'Notes' }), notes]), remove);
     panel.append(tracker);
   }
+
+  panel.querySelector('.detail-close').addEventListener('click', () => panel.close());
+  if (!panel.open) panel.showModal();
 }
 
 function renderResults() {
@@ -130,10 +134,8 @@ function applyFilters() {
   });
   const sort = fields.sort.value;
   state.filtered.sort((a, b) => sort === 'company' ? String(a.company).localeCompare(String(b.company)) : sort === 'deadline' ? String(a.deadline || '9999').localeCompare(String(b.deadline || '9999')) : String(b.last_verified || '').localeCompare(String(a.last_verified || '')));
-  if (!state.filtered.some((record) => record.id === state.selected)) state.selected = state.filtered[0]?.id ?? null;
+  if (!state.filtered.some((record) => record.id === state.selected)) state.selected = null;
   renderResults();
-  const selected = state.filtered.find((record) => record.id === state.selected);
-  if (selected) renderDetail(selected); else $('#detail').replaceChildren(el('p', { className: 'empty', text: state.view === 'tracker' ? 'Save an opportunity to start tracking it.' : 'No opportunity matches these filters.' }));
 }
 
 function switchView(view) {
@@ -177,4 +179,6 @@ $('#clearFilters').addEventListener('click', () => { $('#filters').reset(); appl
 $('#clearTrackerFilter').addEventListener('click', () => { fields.trackingStatus.value = ''; applyFilters(); });
 $('#catalogTab').addEventListener('click', () => switchView('catalog'));
 $('#trackerTab').addEventListener('click', () => switchView('tracker'));
+$('#detail').addEventListener('click', (event) => { if (event.target === $('#detail')) $('#detail').close(); });
+$('#detail').addEventListener('close', () => { state.selected = null; renderResults(); });
 loadCatalog();
