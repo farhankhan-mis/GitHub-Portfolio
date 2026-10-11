@@ -42,6 +42,7 @@ function statusClass(record) { const status = effectiveStatus(record).toLowerCas
 function addOptions(select, values) { values.filter(Boolean).sort((a, b) => a.localeCompare(b)).forEach((value) => select.append(el('option', { value, text: value }))); }
 function searchText(record) { return [record.company, record.role, record.location, record.field_key, record.role_key, record.industry, ...(record.tags || [])].join(' ').toLowerCase(); }
 function trackingFor(record) { return state.tracker[String(record.id)]; }
+function publicStatus(record) { return statusClass(record) === 'closed' ? 'Closed' : null; }
 
 function updateTracking(record, changes) {
   const id = String(record.id);
@@ -65,7 +66,7 @@ function renderCard(record) {
   button.append(
     el('span', { className: 'card-top' }, [el('span', { className: 'company-mark', text: (record.company || '?').slice(0, 1).toUpperCase() }), el('span', {}, [el('strong', { text: record.role || 'Untitled opportunity' }), el('small', { text: record.company || 'Unknown company' })])]),
     el('span', { className: 'location', text: record.location || [record.city, record.state].filter(Boolean).join(', ') || 'Location not listed' }),
-    el('span', { className: 'card-tags' }, [el('span', { text: record.opportunity_type || 'Opportunity' }), el('span', { text: record.work_mode || 'Mode not listed' }), el('span', { className: `status ${statusClass(record)}`, text: effectiveStatus(record) }), ...(tracking ? [el('span', { className: 'tracking-badge', text: tracking.status })] : [])]),
+    el('span', { className: 'card-tags' }, [el('span', { text: record.opportunity_type || 'Opportunity' }), el('span', { text: record.work_mode || 'Mode not listed' }), ...(publicStatus(record) ? [el('span', { className: 'status closed', text: publicStatus(record) })] : []), ...(tracking ? [el('span', { className: 'tracking-badge', text: tracking.status })] : [])]),
     el('span', { className: 'card-footer' }, [el('span', { className: 'verified', text: `Last verified ${dateLabel(record.last_verified)}` }), el('span', { className: 'view-details', text: 'View details →' })]),
   );
   button.addEventListener('click', () => { state.selected = record.id; renderResults(); renderDetail(record); });
@@ -81,7 +82,7 @@ function renderDetail(record) {
   panel.replaceChildren();
   panel.append(
     el('button', { className: 'detail-close', type: 'button', 'aria-label': 'Close opportunity details', text: '×' }),
-    el('div', { className: 'detail-head' }, [el('div', {}, [el('p', { className: 'eyebrow', text: effectiveStatus(record).toUpperCase() }), el('h2', { text: record.role || 'Untitled opportunity' }), el('p', { text: `${record.company || 'Unknown company'} · ${record.location || 'Location not listed'}` })]), el('span', { className: `status ${statusClass(record)}`, text: effectiveStatus(record) })]),
+    el('div', { className: 'detail-head' }, [el('div', {}, [el('p', { className: 'eyebrow', text: 'OPPORTUNITY DETAILS' }), el('h2', { text: record.role || 'Untitled opportunity' }), el('p', { text: `${record.company || 'Unknown company'} · ${record.location || 'Location not listed'}` })]), ...(publicStatus(record) ? [el('span', { className: 'status closed', text: publicStatus(record) })] : [])]),
     el('div', { className: 'detail-actions' }),
     el('dl', { className: 'facts' }, [fact('Field', record.field_key), fact('Role family', record.role_key || record.role_family), fact('Opportunity type', record.opportunity_type), fact('Work mode', record.work_mode), fact('Term', record.term), fact('Deadline', dateLabel(record.deadline)), fact('Last verified', dateLabel(record.last_verified)), fact('Source type', record.link_type || record.source)]),
   );
@@ -157,14 +158,10 @@ async function loadCatalog() {
     state.records = records.map((record, index) => ({ ...record, id: record.id ?? record.canonical_key ?? index }));
     addOptions(fields.field, [...new Set(state.records.map((record) => record.field_key))]);
     addOptions(fields.mode, [...new Set(state.records.map((record) => record.work_mode))]);
-    addOptions(fields.status, [...new Set(state.records.map(effectiveStatus))]);
+    addOptions(fields.status, ['Closed']);
     addOptions(fields.trackingStatus, TRACKING_STATUSES);
     saveTracker();
-    const fresh = state.records.filter((record) => effectiveStatus(record) === 'Active').length;
-    const review = state.records.filter((record) => statusClass(record) === 'review').length;
-    const closed = state.records.filter((record) => statusClass(record) === 'closed').length;
-    $('#catalogHealth').replaceChildren(el('strong', { text: String(state.records.length) }), el('span', { text: `records · ${fresh} current · ${review} need review · ${closed} closed` }));
-    if (review) { const notice = $('#freshnessNotice'); notice.hidden = false; notice.textContent = `${review} listings are awaiting re-verification. Their source links remain available, but confirm availability with the employer before applying.`; }
+    $('#catalogHealth').replaceChildren(el('strong', { text: String(state.records.length) }), el('span', { text: 'public opportunities · checked weekly' }));
     applyFilters();
   } catch (error) {
     $('#resultSummary').textContent = 'The catalog could not be loaded.';
