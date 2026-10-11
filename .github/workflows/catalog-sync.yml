@@ -2,17 +2,18 @@ name: Validate and sync public catalog
 on:
   workflow_dispatch:
   schedule:
-    - cron: '25 12 * * *'
+    # Every Monday at 10:00 AM Eastern during daylight saving time.
+    - cron: '0 14 * * 1'
 permissions:
   contents: read
 jobs:
   validate-and-sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
       - name: Validate public-only catalog
