@@ -1,5 +1,9 @@
 'use strict';
 
+if (window.location.protocol === 'file:') {
+  window.location.replace('https://farhankhan-mis.github.io/GitHub-Portfolio/');
+}
+
 const $ = (selector) => document.querySelector(selector);
 const STORAGE_KEY = 'public-opportunity-catalog-tracker-v1';
 const TRACKING_STATUSES = ['Saved', 'Planning', 'Applied', 'Interviewing', 'Offer', 'Rejected', 'Withdrawn', 'Closed'];
