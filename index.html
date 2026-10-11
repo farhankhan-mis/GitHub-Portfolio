@@ -8,7 +8,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
   <title>Public Opportunity Catalog</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="tracker.css?v=1">
 </head>
 <body>
   <header class="site-header">
@@ -22,6 +23,11 @@
     </section>
     <section class="notice" id="freshnessNotice" hidden aria-live="polite"></section>
     <section class="workspace">
+      <div class="view-tabs" role="tablist" aria-label="Catalog views">
+        <button class="view-tab active" id="catalogTab" type="button" role="tab" aria-selected="true">Browse opportunities</button>
+        <button class="view-tab" id="trackerTab" type="button" role="tab" aria-selected="false">My applications <span id="trackedCount">0</span></button>
+        <p class="local-note">Saved privately in this browser only</p>
+      </div>
       <form class="filters" id="filters" role="search">
         <label class="wide">Search<input id="query" type="search" placeholder="Company, role, keyword, or city" autocomplete="off"></label>
         <label>Field<select id="field"><option value="">All fields</option></select></label>
@@ -29,10 +35,11 @@
         <label>Status<select id="status"><option value="">All statuses</option></select></label>
         <button id="clearFilters" type="button">Clear filters</button>
       </form>
+      <div class="tracker-controls" id="trackerControls" hidden><label>Application status<select id="trackingStatus"><option value="">All statuses</option></select></label><button id="clearTrackerFilter" type="button">Show all saved</button></div>
       <div class="results-heading"><p id="resultSummary" aria-live="polite">Loading opportunities…</p><label class="sort-label">Sort<select id="sort"><option value="verified">Recently verified</option><option value="deadline">Deadline</option><option value="company">Company</option></select></label></div>
       <div class="catalog-layout">
         <div class="results" id="results" aria-label="Opportunity results"></div>
-        <aside class="detail" id="detail" aria-label="Selected opportunity details"><p class="empty">Select an opportunity to view its details.</p></aside>
+        <aside class="detail" id="detail" aria-label="Selected opportunity details"><p class="empty">Select an opportunity to view details and application actions.</p></aside>
       </div>
     </section>
     <section class="standards" aria-labelledby="standards-title">
@@ -42,6 +49,6 @@
   </main>
   <footer><p>Opportunity information can change without notice. Confirm details on the employer’s official page before applying.</p><nav><a href="PRIVACY.md">Privacy</a><a href="SECURITY.md">Security</a></nav></footer>
   <noscript>This catalog requires JavaScript to load and filter its public data.</noscript>
-  <script src="app.js?v=6" defer></script>
+  <script src="app.js?v=7" defer></script>
 </body>
 </html>

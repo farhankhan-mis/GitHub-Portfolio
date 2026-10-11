@@ -2,13 +2,14 @@
 
 ## Public-only boundary
 
-This repository accepts public opportunity metadata only. Never add private trackers, user accounts, application history, notes, contacts, résumés, extracted text, local file paths, API secrets, or personal identifiers.
+This repository accepts public opportunity metadata only. Never commit private trackers, user accounts, application history, notes, contacts, résumés, extracted text, local file paths, API secrets, or personal identifiers. The optional application tracker stores its data only in browser local storage.
 
 ## Browser protections
 
 - The interface creates DOM nodes and assigns untrusted values with `textContent`.
 - External links are restricted to HTTPS and use `noopener noreferrer`.
 - The page defines a restrictive Content Security Policy and does not load third-party scripts.
+- Application statuses and notes remain in browser local storage and are never sent by the application.
 - The site has no authentication, uploads, forms that transmit data, or cross-origin API access.
 
 ## Publishing controls
