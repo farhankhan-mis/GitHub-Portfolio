@@ -7,8 +7,9 @@ if (window.location.protocol === 'file:') {
 const $ = (selector) => document.querySelector(selector);
 const STORAGE_KEY = 'public-opportunity-catalog-tracker-v1';
 const TRACKING_STATUSES = ['Saved', 'Planning', 'Applied', 'Interviewing', 'Offer', 'Rejected', 'Withdrawn', 'Closed'];
-const state = { records: [], filtered: [], selected: null, view: 'catalog', tracker: loadTracker() };
-const fields = { query: $('#query'), field: $('#field'), mode: $('#mode'), status: $('#status'), sort: $('#sort'), trackingStatus: $('#trackingStatus') };
+const ARCHIVED_STATUSES = new Set(['Rejected', 'Withdrawn', 'Closed']);
+const state = { records: [], filtered: [], selected: null, view: 'catalog', trackerView: 'all', tracker: loadTracker() };
+const fields = { query: $('#query'), field: $('#field'), mode: $('#mode'), status: $('#status'), sort: $('#sort') };
 
 function el(tag, options = {}, children = []) {
   const node = document.createElement(tag);
@@ -126,17 +127,40 @@ function renderResults() {
   $('#resultSummary').textContent = state.view === 'tracker' ? `${state.filtered.length} saved opportunities` : `${state.filtered.length} of ${state.records.length} public opportunities`;
 }
 
+function renderTrackerTabs() {
+  const entries = Object.values(state.tracker);
+  document.querySelectorAll('[data-tracking-view]').forEach((button) => {
+    const view = button.dataset.trackingView;
+    const count = view === 'all'
+      ? entries.filter((item) => !ARCHIVED_STATUSES.has(item.status)).length
+      : view === 'archive'
+        ? entries.filter((item) => ARCHIVED_STATUSES.has(item.status)).length
+        : entries.filter((item) => item.status === view).length;
+    const label = view === 'all' ? 'Active' : view === 'archive' ? 'Archive' : view;
+    button.textContent = `${label} ${count}`;
+    button.classList.toggle('active', state.trackerView === view);
+    button.setAttribute('aria-selected', String(state.trackerView === view));
+  });
+}
+
 function applyFilters() {
   const query = fields.query.value.trim().toLowerCase();
   state.filtered = state.records.filter((record) => {
     const tracking = trackingFor(record);
-    if (state.view === 'tracker' && (!tracking || (fields.trackingStatus.value && tracking.status !== fields.trackingStatus.value))) return false;
+    if (state.view === 'catalog' && tracking) return false;
+    if (state.view === 'tracker') {
+      if (!tracking) return false;
+      if (state.trackerView === 'all' && ARCHIVED_STATUSES.has(tracking.status)) return false;
+      if (state.trackerView === 'archive' && !ARCHIVED_STATUSES.has(tracking.status)) return false;
+      if (!['all', 'archive'].includes(state.trackerView) && tracking.status !== state.trackerView) return false;
+    }
     return (!query || searchText(record).includes(query)) && (!fields.field.value || record.field_key === fields.field.value) && (!fields.mode.value || record.work_mode === fields.mode.value) && (!fields.status.value || effectiveStatus(record) === fields.status.value);
   });
   const sort = fields.sort.value;
   state.filtered.sort((a, b) => sort === 'company' ? String(a.company).localeCompare(String(b.company)) : sort === 'deadline' ? String(a.deadline || '9999').localeCompare(String(b.deadline || '9999')) : String(b.last_verified || '').localeCompare(String(a.last_verified || '')));
   if (!state.filtered.some((record) => record.id === state.selected)) state.selected = null;
   renderResults();
+  renderTrackerTabs();
 }
 
 function switchView(view) {
@@ -159,7 +183,6 @@ async function loadCatalog() {
     addOptions(fields.field, [...new Set(state.records.map((record) => record.field_key))]);
     addOptions(fields.mode, [...new Set(state.records.map((record) => record.work_mode))]);
     addOptions(fields.status, ['Closed']);
-    addOptions(fields.trackingStatus, TRACKING_STATUSES);
     saveTracker();
     $('#catalogHealth').replaceChildren(el('strong', { text: String(state.records.length) }), el('span', { text: 'public opportunities · checked weekly' }));
     applyFilters();
@@ -173,9 +196,14 @@ async function loadCatalog() {
 
 Object.values(fields).forEach((control) => control.addEventListener(control === fields.query ? 'input' : 'change', applyFilters));
 $('#clearFilters').addEventListener('click', () => { $('#filters').reset(); applyFilters(); fields.query.focus(); });
-$('#clearTrackerFilter').addEventListener('click', () => { fields.trackingStatus.value = ''; applyFilters(); });
 $('#catalogTab').addEventListener('click', () => switchView('catalog'));
 $('#trackerTab').addEventListener('click', () => switchView('tracker'));
+$('#applicationStatusTabs').addEventListener('click', (event) => {
+  const button = event.target.closest('[data-tracking-view]');
+  if (!button) return;
+  state.trackerView = button.dataset.trackingView;
+  applyFilters();
+});
 $('#detail').addEventListener('click', (event) => { if (event.target === $('#detail')) $('#detail').close(); });
 $('#detail').addEventListener('close', () => { state.selected = null; renderResults(); });
 loadCatalog();

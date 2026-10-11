@@ -9,7 +9,7 @@
   <title>Public Opportunity Catalog</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css?v=7">
-  <link rel="stylesheet" href="tracker.css?v=1">
+  <link rel="stylesheet" href="tracker.css?v=2">
 </head>
 <body>
   <header class="site-header">
@@ -34,7 +34,7 @@
         <label>Status<select id="status"><option value="">All statuses</option></select></label>
         <button id="clearFilters" type="button">Clear filters</button>
       </form>
-      <div class="tracker-controls" id="trackerControls" hidden><label>Application status<select id="trackingStatus"><option value="">All statuses</option></select></label><button id="clearTrackerFilter" type="button">Show all saved</button></div>
+      <div class="tracker-controls" id="trackerControls" hidden><div class="application-status-tabs" id="applicationStatusTabs" role="tablist" aria-label="Application status views"><button class="application-status-tab active" type="button" role="tab" data-tracking-view="all">Active</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Saved">Saved</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Planning">Planning</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Applied">Applied</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Interviewing">Interviewing</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Offer">Offer</button><button class="application-status-tab archive-tab" type="button" role="tab" data-tracking-view="archive">Archive</button></div></div>
       <div class="results-heading"><p id="resultSummary" aria-live="polite">Loading opportunities…</p><label class="sort-label">Sort<select id="sort"><option value="verified">Recently verified</option><option value="deadline">Deadline</option><option value="company">Company</option></select></label></div>
       <div class="catalog-layout">
         <div class="results" id="results" aria-label="Opportunity results"></div>
@@ -43,11 +43,11 @@
     </section>
     <section class="standards" aria-labelledby="standards-title">
       <div><p class="eyebrow">CATALOG STANDARD</p><h2 id="standards-title">Transparent by design</h2></div>
-      <div class="standard-grid"><article><strong>Public sources only</strong><p>No private tracker, application history, résumé, notes, contacts, or account data are used.</p></article><article><strong>Freshness is visible</strong><p>Old or expired records remain clearly labeled until they are reverified or closed.</p></article><article><strong>Official links preferred</strong><p>Employer application pages take priority over aggregators and reposts.</p></article></div>
+      <div class="standard-grid"><article><strong>Public sources only</strong><p>No private tracker, application history, résumé, notes, contacts, or account data are used.</p></article><article><strong>Verification dates stay visible</strong><p>Every opportunity shows when its official source was last checked.</p></article><article><strong>Official links preferred</strong><p>Employer application pages take priority over aggregators and reposts.</p></article></div>
     </section>
   </main>
   <footer><p>Opportunity information can change without notice. Confirm details on the employer’s official page before applying.</p><nav><a href="PRIVACY.md">Privacy</a><a href="SECURITY.md">Security</a></nav></footer>
   <noscript>This catalog requires JavaScript to load and filter its public data.</noscript>
-  <script src="app.js?v=9" defer></script>
+  <script src="app.js?v=10" defer></script>
 </body>
 </html>
