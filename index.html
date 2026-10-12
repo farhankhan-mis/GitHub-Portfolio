@@ -9,7 +9,7 @@
   <title>Public Opportunity Catalog</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css?v=7">
-  <link rel="stylesheet" href="tracker.css?v=2">
+  <link rel="stylesheet" href="tracker.css?v=3">
 </head>
 <body>
   <header class="site-header">
@@ -18,7 +18,7 @@
   </header>
   <main>
     <section class="intro" aria-labelledby="page-title">
-      <div><p class="eyebrow">PUBLIC OPPORTUNITY DIRECTORY</p><h1 id="page-title">Find an opportunity worth pursuing.</h1><p>Search public listings by role, field, location, and work mode. Every record shows its source and verification status.</p></div>
+      <div><p class="eyebrow">PUBLIC OPPORTUNITY DIRECTORY</p><h1 id="page-title">Find an opportunity worth pursuing.</h1><p>Explore jobs, internships, and student opportunities by major, career field, role, location, schedule, work mode, and more. Every record links to its source and shows when it was verified.</p></div>
       <div class="catalog-health" id="catalogHealth" aria-live="polite"><span>Loading catalog…</span></div>
     </section>
     <section class="workspace">
@@ -27,12 +27,19 @@
         <button class="view-tab" id="trackerTab" type="button" role="tab" aria-selected="false">My applications <span id="trackedCount">0</span></button>
         <p class="local-note">Saved privately in this browser only</p>
       </div>
-      <form class="filters" id="filters" role="search">
-        <label class="wide">Search<input id="query" type="search" placeholder="Company, role, keyword, or city" autocomplete="off"></label>
-        <label>Field<select id="field"><option value="">All fields</option></select></label>
+      <form class="filters expanded-filters" id="filters" role="search">
+        <label class="wide">Search<input id="query" type="search" placeholder="Company, role, skill, major, keyword, or city" autocomplete="off"></label>
+        <label>I am looking for<select id="audience"><option value="">Jobs and student opportunities</option><option value="student">Internships and student opportunities</option><option value="career">Jobs for any career stage</option></select></label>
+        <label>Major or academic program<select id="major"><option value="">All majors and programs</option></select></label>
+        <label>Career field<select id="field"><option value="">All career fields</option></select></label>
+        <label>Role family<select id="role"><option value="">All role families</option></select></label>
+        <label>Opportunity type<select id="opportunityType"><option value="">All opportunity types</option></select></label>
         <label>Work mode<select id="mode"><option value="">All work modes</option></select></label>
+        <label>Schedule<select id="schedule"><option value="">All schedules</option></select></label>
+        <label>State or region<select id="region"><option value="">All locations</option></select></label>
+        <label>Term or season<select id="term"><option value="">All terms</option></select></label>
         <label>Status<select id="status"><option value="">All statuses</option></select></label>
-        <button id="clearFilters" type="button">Clear filters</button>
+        <button id="clearFilters" type="button">Clear all filters</button>
       </form>
       <div class="tracker-controls" id="trackerControls" hidden><div class="application-status-tabs" id="applicationStatusTabs" role="tablist" aria-label="Application status views"><button class="application-status-tab active" type="button" role="tab" data-tracking-view="all">Active</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Saved">Saved</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Planning">Planning</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Applied">Applied</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Interviewing">Interviewing</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Offer">Offer</button><button class="application-status-tab archive-tab" type="button" role="tab" data-tracking-view="archive">Archive</button></div></div>
       <div class="results-heading"><p id="resultSummary" aria-live="polite">Loading opportunities…</p><label class="sort-label">Sort<select id="sort"><option value="verified">Recently verified</option><option value="deadline">Deadline</option><option value="company">Company</option></select></label></div>
@@ -48,6 +55,7 @@
   </main>
   <footer><p>Opportunity information can change without notice. Confirm details on the employer’s official page before applying.</p><nav><a href="PRIVACY.md">Privacy</a><a href="SECURITY.md">Security</a></nav></footer>
   <noscript>This catalog requires JavaScript to load and filter its public data.</noscript>
-  <script src="app.js?v=10" defer></script>
+  <script src="taxonomy.js?v=1" defer></script>
+  <script src="app.js?v=11" defer></script>
 </body>
 </html>

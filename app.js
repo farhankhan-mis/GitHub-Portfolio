@@ -9,7 +9,36 @@ const STORAGE_KEY = 'public-opportunity-catalog-tracker-v1';
 const TRACKING_STATUSES = ['Saved', 'Planning', 'Applied', 'Interviewing', 'Offer', 'Rejected', 'Withdrawn', 'Closed'];
 const ARCHIVED_STATUSES = new Set(['Rejected', 'Withdrawn', 'Closed']);
 const state = { records: [], filtered: [], selected: null, view: 'catalog', trackerView: 'all', tracker: loadTracker() };
-const fields = { query: $('#query'), field: $('#field'), mode: $('#mode'), status: $('#status'), sort: $('#sort') };
+const fields = { query: $('#query'), audience: $('#audience'), major: $('#major'), field: $('#field'), role: $('#role'), opportunityType: $('#opportunityType'), mode: $('#mode'), schedule: $('#schedule'), region: $('#region'), term: $('#term'), status: $('#status'), sort: $('#sort') };
+const STUDENT_TYPES = new Set(['Internship', 'Co-op', 'Fellowship', 'Apprenticeship', 'Research position', 'On-campus job', 'Volunteer or service opportunity']);
+const CAREER_TYPES = new Set(['Full-time job', 'Part-time job', 'Entry-level job', 'Contract role', 'Temporary or seasonal job']);
+const US_REGIONS = ['Remote', 'Multiple locations', 'International', 'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
+const EXTRA_MAJORS = ['Advertising','African American Studies','Animal Science','Archaeology','Biomedical Sciences','Business Law','Communication Sciences and Disorders','Community Health','Elementary Education','Environmental Studies','Ethnic Studies','Event Management','Family and Consumer Sciences','Foreign Languages','Gender and Women’s Studies','Global Studies','Healthcare Management','Human Services','Interdisciplinary Studies','Interior Design','Labor Relations','Music Business','Organizational Leadership','Peace and Conflict Studies','Recreation Management','Religious Studies','Secondary Education','Social Sciences','Sport Analytics','Theatre Production','Undecided or exploring','Other or interdisciplinary program'];
+const MAJOR_FIELD_GROUPS = {
+  'Accounting & Finance': ['Accounting','Actuarial Science','Economics','Finance','Real Estate'],
+  'Business & Management': ['Business Administration','Business Analytics','Engineering Management','Entrepreneurship','Human Resources Management','International Business','Management','Management Information Systems','Operations Management'],
+  'Sales, Marketing & Customer Experience': ['Advertising','Marketing','Public Relations'],
+  'Technology & Computing': ['Artificial Intelligence','Computer Engineering','Computer Information Systems','Computer Science','Cybersecurity','Game Design','Information Systems','Information Technology','Management Information Systems','Software Engineering','Web Development'],
+  'Data, AI & Mathematics': ['Actuarial Science','Applied Mathematics','Artificial Intelligence','Business Analytics','Data Analytics','Data Science','Mathematics','Statistics'],
+  'Engineering': ['Aerospace Engineering','Bioengineering','Biomedical Engineering','Chemical Engineering','Civil Engineering','Computer Engineering','Electrical Engineering','Engineering Management','Environmental Engineering','Industrial Engineering','Materials Science','Mechanical Engineering','Robotics'],
+  'Physical Sciences': ['Astronomy','Chemistry','Forensic Science','Geology','Materials Science','Meteorology','Physics'],
+  'Life Sciences & Biotechnology': ['Biochemistry','Bioengineering','Bioinformatics','Biology','Biotechnology','Marine Biology','Microbiology','Neuroscience','Veterinary Science','Wildlife Biology'],
+  'Healthcare & Clinical': ['Athletic Training','Clinical Laboratory Science','Dental Hygiene','Health Administration','Health Informatics','Health Sciences','Nursing','Nutrition','Occupational Therapy','Pharmacy','Pre-Medicine','Radiologic Sciences'],
+  'Public Health': ['Emergency Management','Global Health','Health Informatics','Health Sciences','Nutrition','Public Health'],
+  'Education': ['Education','Library Science','Special Education'],
+  'Social & Behavioral Sciences': ['American Studies','Anthropology','Economics','Geography','History','Linguistics','Philosophy','Political Science','Psychology','Social Work','Sociology'],
+  'Government & Public Policy': ['Emergency Management','International Relations','Political Science','Public Administration','Public Policy','Urban Planning'],
+  'Law, Compliance & Public Safety': ['Criminal Justice','Legal Studies','Paralegal Studies','Pre-Law'],
+  'Arts, Design & Creative': ['Architecture','Art History','Fashion Design','Fine Arts','Game Design','Graphic Design','Industrial Design','Photography','Product Design','Theatre','User Experience Design'],
+  'Media, Writing & Communications': ['Communications','English','Film & Media Studies','Journalism','Linguistics','Music','Photography','Public Relations','Theatre'],
+  'Environment & Sustainability': ['Environmental Engineering','Environmental Science','Geography','Geology','Marine Biology','Sustainability','Urban Planning','Wildlife Biology'],
+  'Agriculture, Food & Natural Resources': ['Agricultural Business','Agricultural Science','Food Science','Forestry','Veterinary Science','Wildlife Biology'],
+  'Hospitality, Tourism & Events': ['Hospitality Management','Tourism Management'],
+  'Sports, Fitness & Recreation': ['Athletic Training','Exercise Science','Kinesiology','Sports Management'],
+  'Nonprofit & Community Services': ['Nonprofit Management','Public Administration','Social Work','Sociology'],
+  'Architecture, Construction & Real Estate': ['Architecture','Civil Engineering','Construction Management','Real Estate','Urban Planning'],
+  'Transportation, Logistics & Supply Chain': ['Industrial Engineering','Operations Management','Supply Chain Management']
+};
 
 function el(tag, options = {}, children = []) {
   const node = document.createElement(tag);
@@ -38,12 +67,35 @@ function saveTracker() {
 function safeHttps(value) { try { const url = new URL(value); return url.protocol === 'https:' ? url.href : null; } catch { return null; } }
 function dateLabel(value) { if (!value) return 'Not listed'; const date = new Date(`${value}T12:00:00`); return Number.isNaN(date.getTime()) ? 'Not listed' : date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
 function ageInDays(value) { if (!value) return Infinity; return Math.floor((Date.now() - new Date(`${value}T12:00:00`).getTime()) / 86400000); }
-function effectiveStatus(record) { const current = record.listing_status || 'Needs review'; return current === 'Active' && ageInDays(record.last_verified) > 14 ? 'Needs re-verification' : current; }
+function effectiveStatus(record) { return record.listing_status || 'Active'; }
 function statusClass(record) { const status = effectiveStatus(record).toLowerCase(); if (status === 'active') return 'active'; if (status === 'closed' || status === 'expired') return 'closed'; return 'review'; }
 function addOptions(select, values) { values.filter(Boolean).sort((a, b) => a.localeCompare(b)).forEach((value) => select.append(el('option', { value, text: value }))); }
-function searchText(record) { return [record.company, record.role, record.location, record.field_key, record.role_key, record.industry, ...(record.tags || [])].join(' ').toLowerCase(); }
+function searchText(record) {
+  return [record.company, record.role, record.location, record.field_key, record.role_key, record.industry, record.description, record.details_eligibility, record.education_requirements, record.opportunity_type, record.employment_type, record.schedule_type, record.work_mode, record.term, ...(record.tags || [])].filter(Boolean).join(' ').toLowerCase();
+}
 function trackingFor(record) { return state.tracker[String(record.id)]; }
 function publicStatus(record) { return statusClass(record) === 'closed' ? 'Closed' : null; }
+function opportunityType(record) { return record.opportunity_type || record.employment_type || ''; }
+function majorMatches(record, major) {
+  if (!major) return true;
+  if (['Undecided or exploring', 'Other or interdisciplinary program'].includes(major)) return true;
+  const direct = searchText(record).includes(major.toLowerCase());
+  return direct || Object.entries(MAJOR_FIELD_GROUPS).some(([field, majors]) => majors.includes(major) && record.field_key === field);
+}
+function regionMatches(record, region) {
+  if (!region) return true;
+  if (region === 'Remote') return String(record.work_mode).toLowerCase().includes('remote') || String(record.location).toLowerCase().includes('remote');
+  if (region === 'Multiple locations') return /multiple|multi|varies/i.test(record.location || '');
+  if (region === 'International') return /international|global|worldwide/i.test(record.location || '');
+  return record.state === region || new RegExp(`(?:,|/)\\s*${region}(?:\\b|/)`).test(record.location || '');
+}
+function refreshRoleOptions() {
+  const selected = fields.role.value;
+  const roles = fields.field.value ? (window.CAREER_TAXONOMY.fields[fields.field.value] || []) : Object.values(window.CAREER_TAXONOMY.fields).flat();
+  fields.role.replaceChildren(el('option', { value: '', text: 'All role families' }));
+  addOptions(fields.role, [...new Set(roles)]);
+  if ([...fields.role.options].some((option) => option.value === selected)) fields.role.value = selected;
+}
 
 function updateTracking(record, changes) {
   const id = String(record.id);
@@ -123,7 +175,7 @@ function renderDetail(record) {
 function renderResults() {
   const results = $('#results');
   results.replaceChildren(...state.filtered.map(renderCard));
-  if (!state.filtered.length) results.append(el('div', { className: 'empty', text: state.view === 'tracker' ? 'No saved opportunities match this status.' : 'No opportunities match these filters.' }));
+  if (!state.filtered.length) results.append(el('div', { className: 'empty', text: state.view === 'tracker' ? 'No saved opportunities match this status.' : 'No current verified opportunities match every selected filter yet. Try clearing one or more filters; the catalog searches every category during its weekly update.' }));
   $('#resultSummary').textContent = state.view === 'tracker' ? `${state.filtered.length} saved opportunities` : `${state.filtered.length} of ${state.records.length} public opportunities`;
 }
 
@@ -154,7 +206,10 @@ function applyFilters() {
       if (state.trackerView === 'archive' && !ARCHIVED_STATUSES.has(tracking.status)) return false;
       if (!['all', 'archive'].includes(state.trackerView) && tracking.status !== state.trackerView) return false;
     }
-    return (!query || searchText(record).includes(query)) && (!fields.field.value || record.field_key === fields.field.value) && (!fields.mode.value || record.work_mode === fields.mode.value) && (!fields.status.value || effectiveStatus(record) === fields.status.value);
+    const type = opportunityType(record);
+    const audienceMatch = !fields.audience.value || (fields.audience.value === 'student' ? STUDENT_TYPES.has(type) : CAREER_TYPES.has(type));
+    const termMatch = !fields.term.value || String(record.term || '').toLowerCase().includes(fields.term.value.toLowerCase());
+    return (!query || searchText(record).includes(query)) && audienceMatch && majorMatches(record, fields.major.value) && (!fields.field.value || record.field_key === fields.field.value) && (!fields.role.value || (record.role_key || record.role_family) === fields.role.value) && (!fields.opportunityType.value || type === fields.opportunityType.value) && (!fields.mode.value || record.work_mode === fields.mode.value) && (!fields.schedule.value || record.schedule_type === fields.schedule.value) && regionMatches(record, fields.region.value) && termMatch && (!fields.status.value || effectiveStatus(record) === fields.status.value);
   });
   const sort = fields.sort.value;
   state.filtered.sort((a, b) => sort === 'company' ? String(a.company).localeCompare(String(b.company)) : sort === 'deadline' ? String(a.deadline || '9999').localeCompare(String(b.deadline || '9999')) : String(b.last_verified || '').localeCompare(String(a.last_verified || '')));
@@ -180,9 +235,15 @@ async function loadCatalog() {
     const records = await response.json();
     if (!Array.isArray(records)) throw new Error('Catalog format is invalid');
     state.records = records.map((record, index) => ({ ...record, id: record.id ?? record.canonical_key ?? index }));
-    addOptions(fields.field, [...new Set(state.records.map((record) => record.field_key))]);
-    addOptions(fields.mode, [...new Set(state.records.map((record) => record.work_mode))]);
-    addOptions(fields.status, ['Closed']);
+    addOptions(fields.major, [...new Set([...window.CAREER_TAXONOMY.majors, ...EXTRA_MAJORS])]);
+    addOptions(fields.field, Object.keys(window.CAREER_TAXONOMY.fields));
+    refreshRoleOptions();
+    addOptions(fields.opportunityType, window.CAREER_TAXONOMY.opportunityTypes);
+    addOptions(fields.mode, ['On-site','Hybrid','Remote','Hybrid/On-site','Hybrid/Remote','Remote/Hybrid','Varies']);
+    addOptions(fields.schedule, ['Full-time','Part-time','Flexible','Seasonal','Weekends','Evenings','Not listed']);
+    addOptions(fields.region, US_REGIONS);
+    addOptions(fields.term, ['Spring','Summer','Fall','Winter','Academic year','Year-round','Rolling']);
+    addOptions(fields.status, ['Active','Closed']);
     saveTracker();
     $('#catalogHealth').replaceChildren(el('strong', { text: String(state.records.length) }), el('span', { text: 'public opportunities · checked weekly' }));
     applyFilters();
@@ -194,7 +255,10 @@ async function loadCatalog() {
   }
 }
 
-Object.values(fields).forEach((control) => control.addEventListener(control === fields.query ? 'input' : 'change', applyFilters));
+Object.values(fields).forEach((control) => {
+  if (control === fields.field) control.addEventListener('change', () => { refreshRoleOptions(); applyFilters(); });
+  else control.addEventListener(control === fields.query ? 'input' : 'change', applyFilters);
+});
 $('#clearFilters').addEventListener('click', () => { $('#filters').reset(); applyFilters(); fields.query.focus(); });
 $('#catalogTab').addEventListener('click', () => switchView('catalog'));
 $('#trackerTab').addEventListener('click', () => switchView('tracker'));
