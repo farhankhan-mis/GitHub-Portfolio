@@ -25,3 +25,4 @@
 .expanded-filters{grid-template-columns:repeat(4,minmax(180px,1fr))}.expanded-filters .wide{grid-column:span 2}.expanded-filters button{align-self:end}@media(max-width:1100px){.expanded-filters{grid-template-columns:repeat(3,minmax(170px,1fr))}}@media(max-width:760px){.expanded-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.expanded-filters .wide{grid-column:1/-1}}@media(max-width:520px){.expanded-filters{grid-template-columns:1fr}.expanded-filters .wide{grid-column:auto}}
 .tracker-controls[hidden]{display:none}.results{grid-auto-rows:max-content}
 .catalog-layout{grid-template-columns:minmax(0,1fr)}.results{grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr))}
+.expanded-filters label{min-width:0}.expanded-filters input,.expanded-filters select{width:100%;min-width:0}
