@@ -1,0 +1,110 @@
+{
+  "run_date": "2026-10-19",
+  "status": "incomplete",
+  "existing_records": 78,
+  "url_checks_attempted": 78,
+  "http_successes": 64,
+  "http_failures_or_blocks": 14,
+  "strong_page_matches": 56,
+  "possible_generic_or_blocked": 8,
+  "records_added": 0,
+  "records_updated": 16,
+  "records_closed": [
+    {
+      "id": "48b08584db2c6c02",
+      "company": "AArete",
+      "role": "Consulting Intern"
+    },
+    {
+      "id": "09f259722890f078",
+      "company": "Alpha FMC",
+      "role": "AWM & Alternatives Consulting Intern"
+    },
+    {
+      "id": "d53d32d2b26f68d1",
+      "company": "Arthur D. Little",
+      "role": "Summer Business Analyst"
+    },
+    {
+      "id": "0793887c44b49b09",
+      "company": "Capital One",
+      "role": "Business Analyst Intern"
+    },
+    {
+      "id": "576b2ce3f03b64b1",
+      "company": "CECO Environmental",
+      "role": "Finance and Accounting Analyst Intern"
+    },
+    {
+      "id": "9b3fad2964a1bb09",
+      "company": "Centric Brands",
+      "role": "IT Business Analyst Internship"
+    },
+    {
+      "id": "24d746397b1c1715",
+      "company": "Cherry Bekaert",
+      "role": "CFO Advisory Intern"
+    },
+    {
+      "id": "cb6bd19d43336b66",
+      "company": "EY",
+      "role": "Consulting - Finance Intern"
+    },
+    {
+      "id": "9d455a21f90a53e8",
+      "company": "Forbright Bank",
+      "role": "National Lending Intern"
+    },
+    {
+      "id": "b6dacaf8b55b1d85",
+      "company": "Huntington",
+      "role": "Corporate and Investment Banking Internship"
+    },
+    {
+      "id": "fa592f480a04b91a",
+      "company": "KPMG",
+      "role": "Economic Valuation Services - Transfer Pricing Intern"
+    },
+    {
+      "id": "3656ffeabcbf48d1",
+      "company": "KPMG",
+      "role": "Economic Valuation Services - Valuation Intern"
+    },
+    {
+      "id": "845afabfae794f12",
+      "company": "KPMG",
+      "role": "State & Local Tax - US Indirect Tax Compliance Intern"
+    },
+    {
+      "id": "e21430254286554e",
+      "company": "KPMG",
+      "role": "Tax Intern - Multiple Locations"
+    },
+    {
+      "id": "473053e2a08bacb9",
+      "company": "Libra Group",
+      "role": "Libra Internship Program"
+    },
+    {
+      "id": "051ddf6c3bb5db66",
+      "company": "Walleye Capital",
+      "role": "Finance & Accounting Intern"
+    }
+  ],
+  "fields_present": [
+    "Business & Management",
+    "Data, AI & Mathematics",
+    "Accounting & Finance",
+    "Sales, Marketing & Customer Experience"
+  ],
+  "canonical_field_coverage_attempted": false,
+  "canonical_role_coverage_attempted": false,
+  "other_filter_coverage_attempted": false,
+  "zero_result_categories": [],
+  "failures": [
+    "Full official-page and apply-flow confirmation was not completed for every record.",
+    "Discovery was not attempted for 100% of canonical fields, roles, and other filter categories.",
+    "Some sources returned bot-blocking responses or generic employer pages."
+  ],
+  "note": "No last_verified dates were advanced. Only records with definitive 404/410 or explicit posting-not-found redirects were closed."
+}
