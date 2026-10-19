@@ -8,6 +8,7 @@ const $ = (selector) => document.querySelector(selector);
 const STORAGE_KEY = 'public-opportunity-catalog-tracker-v1';
 const TRACKING_STATUSES = ['Saved', 'Planning', 'Applied', 'Interviewing', 'Offer', 'Rejected', 'Withdrawn', 'Closed'];
 const ARCHIVED_STATUSES = new Set(['Rejected', 'Withdrawn', 'Closed']);
+const PRE_APPLICATION_STATUSES = new Set(['Saved', 'Planning']);
 const state = { records: [], filtered: [], selected: null, view: 'catalog', trackerView: 'all', tracker: loadTracker() };
 const fields = { query: $('#query'), audience: $('#audience'), major: $('#major'), field: $('#field'), role: $('#role'), opportunityType: $('#opportunityType'), mode: $('#mode'), schedule: $('#schedule'), region: $('#region'), term: $('#term'), status: $('#status'), sort: $('#sort') };
 const STUDENT_TYPES = new Set(['Internship', 'Co-op', 'Fellowship', 'Apprenticeship', 'Research position', 'On-campus job', 'Volunteer or service opportunity']);
@@ -60,7 +61,8 @@ function loadTracker() {
 }
 
 function saveTracker() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.tracker));
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.tracker)); }
+  catch { $('.local-note').textContent = 'Browser storage is unavailable, so saved items last only until this page closes'; }
   $('#trackedCount').textContent = String(Object.keys(state.tracker).length);
 }
 
@@ -69,12 +71,12 @@ function dateLabel(value) { if (!value) return 'Not listed'; const date = new Da
 function ageInDays(value) { if (!value) return Infinity; return Math.floor((Date.now() - new Date(`${value}T12:00:00`).getTime()) / 86400000); }
 function effectiveStatus(record) { return record.listing_status || 'Active'; }
 function statusClass(record) { const status = effectiveStatus(record).toLowerCase(); if (status === 'active') return 'active'; if (status === 'closed' || status === 'expired') return 'closed'; return 'review'; }
+function statusBadge(record) { return statusClass(record) === 'active' ? [] : [el('span', { className: `status ${statusClass(record)}`, text: effectiveStatus(record) })]; }
 function addOptions(select, values) { values.filter(Boolean).sort((a, b) => a.localeCompare(b)).forEach((value) => select.append(el('option', { value, text: value }))); }
 function searchText(record) {
   return [record.company, record.role, record.location, record.field_key, record.role_key, record.industry, record.description, record.details_eligibility, record.education_requirements, record.opportunity_type, record.employment_type, record.schedule_type, record.work_mode, record.term, ...(record.tags || [])].filter(Boolean).join(' ').toLowerCase();
 }
 function trackingFor(record) { return state.tracker[String(record.id)]; }
-function publicStatus(record) { return statusClass(record) === 'closed' ? 'Closed' : null; }
 function opportunityType(record) { return record.opportunity_type || record.employment_type || ''; }
 function majorMatches(record, major) {
   if (!major) return true;
@@ -119,7 +121,7 @@ function renderCard(record) {
   button.append(
     el('span', { className: 'card-top' }, [el('span', { className: 'company-mark', text: (record.company || '?').slice(0, 1).toUpperCase() }), el('span', {}, [el('strong', { text: record.role || 'Untitled opportunity' }), el('small', { text: record.company || 'Unknown company' })])]),
     el('span', { className: 'location', text: record.location || [record.city, record.state].filter(Boolean).join(', ') || 'Location not listed' }),
-    el('span', { className: 'card-tags' }, [el('span', { text: record.opportunity_type || 'Opportunity' }), el('span', { text: record.work_mode || 'Mode not listed' }), ...(publicStatus(record) ? [el('span', { className: 'status closed', text: publicStatus(record) })] : []), ...(tracking ? [el('span', { className: 'tracking-badge', text: tracking.status })] : [])]),
+    el('span', { className: 'card-tags' }, [el('span', { text: record.opportunity_type || 'Opportunity' }), el('span', { text: record.work_mode || 'Mode not listed' }), ...statusBadge(record), ...(tracking ? [el('span', { className: 'tracking-badge', text: tracking.status })] : [])]),
     el('span', { className: 'card-footer' }, [el('span', { className: 'verified', text: `Last verified ${dateLabel(record.last_verified)}` }), el('span', { className: 'view-details', text: 'View details →' })]),
   );
   button.addEventListener('click', () => { state.selected = record.id; renderResults(); renderDetail(record); });
@@ -135,15 +137,18 @@ function renderDetail(record) {
   panel.replaceChildren();
   panel.append(
     el('button', { className: 'detail-close', type: 'button', 'aria-label': 'Close opportunity details', text: '×' }),
-    el('div', { className: 'detail-head' }, [el('div', {}, [el('p', { className: 'eyebrow', text: 'OPPORTUNITY DETAILS' }), el('h2', { text: record.role || 'Untitled opportunity' }), el('p', { text: `${record.company || 'Unknown company'} · ${record.location || 'Location not listed'}` })]), ...(publicStatus(record) ? [el('span', { className: 'status closed', text: publicStatus(record) })] : [])]),
+    el('div', { className: 'detail-head' }, [el('div', {}, [el('p', { className: 'eyebrow', text: 'OPPORTUNITY DETAILS' }), el('h2', { text: record.role || 'Untitled opportunity' }), el('p', { text: `${record.company || 'Unknown company'} · ${record.location || 'Location not listed'}` })]), ...statusBadge(record)]),
     el('div', { className: 'detail-actions' }),
-    el('dl', { className: 'facts' }, [fact('Field', record.field_key), fact('Role family', record.role_key || record.role_family), fact('Opportunity type', record.opportunity_type), fact('Work mode', record.work_mode), fact('Term', record.term), fact('Deadline', dateLabel(record.deadline)), fact('Last verified', dateLabel(record.last_verified)), fact('Source type', record.link_type || record.source)]),
+    el('dl', { className: 'facts' }, [fact('Field', record.field_key), fact('Role family', record.role_key || record.role_family), fact('Opportunity type', record.opportunity_type), fact('Work mode', record.work_mode), fact('Term', record.term), fact('Deadline', dateLabel(record.deadline)), fact('Listing status', effectiveStatus(record)), fact('Last verified', dateLabel(record.last_verified)), fact('Source type', record.link_type || record.source)]),
   );
 
   const actions = panel.querySelector('.detail-actions');
   if (url) {
     const apply = el('a', { className: 'primary-link', href: url, target: '_blank', rel: 'noopener noreferrer', text: 'Apply on source site ↗' });
-    apply.addEventListener('click', () => updateTracking(record, { status: 'Applied', appliedAt: tracking?.appliedAt || new Date().toISOString() }));
+    apply.addEventListener('click', () => {
+      if (tracking && !PRE_APPLICATION_STATUSES.has(tracking.status)) return;
+      updateTracking(record, { status: 'Applied', appliedAt: tracking?.appliedAt || new Date().toISOString() });
+    });
     actions.append(apply);
   } else actions.append(el('p', { className: 'warning', text: 'No safe HTTPS source is available for this record.' }));
   const save = el('button', { className: tracking ? 'secondary-action saved' : 'secondary-action', type: 'button', text: tracking ? 'Saved ✓' : 'Save opportunity' });
@@ -175,7 +180,7 @@ function renderDetail(record) {
 function renderResults() {
   const results = $('#results');
   results.replaceChildren(...state.filtered.map(renderCard));
-  if (!state.filtered.length) results.append(el('div', { className: 'empty', text: state.view === 'tracker' ? 'No saved opportunities match this status.' : 'No current verified opportunities match every selected filter yet. Try clearing one or more filters; the catalog searches every category during its weekly update.' }));
+  if (!state.filtered.length) results.append(el('div', { className: 'empty', text: state.view === 'tracker' ? 'No saved opportunities match this status.' : 'No opportunities match every selected filter. Try clearing one or more filters. Coverage is still growing, so some categories have no listings yet.' }));
   $('#resultSummary').textContent = state.view === 'tracker' ? `${state.filtered.length} saved opportunities` : `${state.filtered.length} of ${state.records.length} public opportunities`;
 }
 
@@ -243,9 +248,10 @@ async function loadCatalog() {
     addOptions(fields.schedule, ['Full-time','Part-time','Flexible','Seasonal','Weekends','Evenings','Not listed']);
     addOptions(fields.region, US_REGIONS);
     addOptions(fields.term, ['Spring','Summer','Fall','Winter','Academic year','Year-round','Rolling']);
-    addOptions(fields.status, ['Active','Closed']);
+    addOptions(fields.status, [...new Set(state.records.map(effectiveStatus))]);
     saveTracker();
-    $('#catalogHealth').replaceChildren(el('strong', { text: String(state.records.length) }), el('span', { text: 'public opportunities · checked weekly' }));
+    const statusCounts = [['Active', 'verified active'], ['Needs re-verification', 'need re-verification'], ['Closed', 'closed']].map(([status, label]) => `${state.records.filter((record) => effectiveStatus(record) === status).length} ${label}`);
+    $('#catalogHealth').replaceChildren(el('strong', { text: String(state.records.length) }), el('span', { text: 'public opportunities' }), el('span', { text: statusCounts.join(' · ') }));
     applyFilters();
   } catch (error) {
     $('#resultSummary').textContent = 'The catalog could not be loaded.';
