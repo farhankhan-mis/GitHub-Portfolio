@@ -8,20 +8,21 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
   <title>Public Opportunity Catalog</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=7">
-  <link rel="stylesheet" href="tracker.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="./" aria-label="Public Opportunity Catalog home"><span class="brand-mark">OC</span><span><strong>Opportunity Catalog</strong><small>Public sources only</small></span></a>
-    <a class="repo-link" href="https://github.com/farhankhan-mis/GitHub-Portfolio" target="_blank" rel="noopener noreferrer">View source</a>
+    <nav class="header-nav" aria-label="Site"><a href="#standards-title">Our standard</a><a class="repo-link" href="https://github.com/farhankhan-mis/GitHub-Portfolio" target="_blank" rel="noopener noreferrer">View source</a></nav>
   </header>
+  <section class="hero" aria-labelledby="page-title">
+    <div class="intro">
+      <div class="intro-copy"><p class="eyebrow">PUBLIC OPPORTUNITY DIRECTORY</p><h1 id="page-title">Find an opportunity worth pursuing.</h1><p>Explore jobs, internships, and student opportunities by major, career field, role, location, schedule, work mode, and more. Every record links to its source and shows when it was last checked and whether it still needs re-verification.</p><ul class="hero-points"><li>Official links preferred</li><li>Saved privately in your browser</li><li>No account needed</li></ul></div>
+      <div class="catalog-health" id="catalogHealth" aria-live="polite"><p class="health-label">Catalog status</p><span class="health-loading">Loading catalog…</span></div>
+    </div>
+  </section>
   <main>
-    <section class="intro" aria-labelledby="page-title">
-      <div><p class="eyebrow">PUBLIC OPPORTUNITY DIRECTORY</p><h1 id="page-title">Find an opportunity worth pursuing.</h1><p>Explore jobs, internships, and student opportunities by major, career field, role, location, schedule, work mode, and more. Every record links to its source and shows when it was last checked and whether it still needs re-verification.</p></div>
-      <div class="catalog-health" id="catalogHealth" aria-live="polite"><span>Loading catalog…</span></div>
-    </section>
-    <section class="workspace">
+    <section class="workspace" aria-label="Browse and track opportunities">
       <div class="view-tabs" role="tablist" aria-label="Catalog views">
         <button class="view-tab active" id="catalogTab" type="button" role="tab" aria-selected="true">Browse opportunities</button>
         <button class="view-tab" id="trackerTab" type="button" role="tab" aria-selected="false">My applications <span id="trackedCount">0</span></button>
@@ -49,13 +50,13 @@
       </div>
     </section>
     <section class="standards" aria-labelledby="standards-title">
-      <div><p class="eyebrow">CATALOG STANDARD</p><h2 id="standards-title">Transparent by design</h2></div>
+      <div class="standards-intro"><p class="eyebrow">CATALOG STANDARD</p><h2 id="standards-title">Transparent by design</h2><p>Every listing follows the same three rules, so you can judge it before you spend time on an application.</p></div>
       <div class="standard-grid"><article><strong>Public sources only</strong><p>No private tracker, application history, résumé, notes, contacts, or account data are used.</p></article><article><strong>Verification dates stay visible</strong><p>Every opportunity shows when its official source was last checked.</p></article><article><strong>Official links preferred</strong><p>Employer application pages take priority over aggregators and reposts.</p></article></div>
     </section>
   </main>
   <footer><p>Opportunity information can change without notice. Confirm details on the employer’s official page before applying.</p><nav><a href="PRIVACY.md">Privacy</a><a href="SECURITY.md">Security</a></nav></footer>
   <noscript>This catalog requires JavaScript to load and filter its public data.</noscript>
   <script src="taxonomy.js?v=1" defer></script>
-  <script src="app.js?v=12" defer></script>
+  <script src="app.js?v=13" defer></script>
 </body>
 </html>

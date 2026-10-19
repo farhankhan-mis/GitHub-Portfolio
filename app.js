@@ -9,7 +9,7 @@ const STORAGE_KEY = 'public-opportunity-catalog-tracker-v1';
 const TRACKING_STATUSES = ['Saved', 'Planning', 'Applied', 'Interviewing', 'Offer', 'Rejected', 'Withdrawn', 'Closed'];
 const ARCHIVED_STATUSES = new Set(['Rejected', 'Withdrawn', 'Closed']);
 const PRE_APPLICATION_STATUSES = new Set(['Saved', 'Planning']);
-const state = { records: [], filtered: [], selected: null, view: 'catalog', trackerView: 'all', tracker: loadTracker() };
+const state = { records: [], filtered: [], selected: null, view: 'catalog', trackerView: 'all', stagger: true, tracker: loadTracker() };
 const fields = { query: $('#query'), audience: $('#audience'), major: $('#major'), field: $('#field'), role: $('#role'), opportunityType: $('#opportunityType'), mode: $('#mode'), schedule: $('#schedule'), region: $('#region'), term: $('#term'), status: $('#status'), sort: $('#sort') };
 const STUDENT_TYPES = new Set(['Internship', 'Co-op', 'Fellowship', 'Apprenticeship', 'Research position', 'On-campus job', 'Volunteer or service opportunity']);
 const CAREER_TYPES = new Set(['Full-time job', 'Part-time job', 'Entry-level job', 'Contract role', 'Temporary or seasonal job']);
@@ -115,11 +115,15 @@ function removeTracking(record) {
   if (state.view === 'catalog') renderDetail(record);
 }
 
-function renderCard(record) {
+function toneFor(record) { return String([...String(record.company || '')].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 6); }
+function companyMark(record, extraClass = '') { return el('span', { className: `company-mark ${extraClass}`.trim(), 'aria-hidden': 'true', text: (record.company || '?').slice(0, 1).toUpperCase() }); }
+
+function renderCard(record, index = 0) {
   const tracking = trackingFor(record);
-  const button = el('button', { className: `opportunity-card ${state.selected === record.id ? 'selected' : ''}`, type: 'button', dataset: { id: String(record.id) }, 'aria-label': `View details for ${record.role} at ${record.company}` });
+  const button = el('button', { className: `opportunity-card ${state.selected === record.id ? 'selected' : ''}`, type: 'button', dataset: { id: String(record.id), tone: toneFor(record) }, 'aria-label': `View details for ${record.role} at ${record.company}` });
+  button.style.setProperty('--i', String(Math.min(index, 16)));
   button.append(
-    el('span', { className: 'card-top' }, [el('span', { className: 'company-mark', text: (record.company || '?').slice(0, 1).toUpperCase() }), el('span', {}, [el('strong', { text: record.role || 'Untitled opportunity' }), el('small', { text: record.company || 'Unknown company' })])]),
+    el('span', { className: 'card-top' }, [companyMark(record), el('span', {}, [el('strong', { text: record.role || 'Untitled opportunity' }), el('small', { text: record.company || 'Unknown company' })])]),
     el('span', { className: 'location', text: record.location || [record.city, record.state].filter(Boolean).join(', ') || 'Location not listed' }),
     el('span', { className: 'card-tags' }, [el('span', { text: record.opportunity_type || 'Opportunity' }), el('span', { text: record.work_mode || 'Mode not listed' }), ...statusBadge(record), ...(tracking ? [el('span', { className: 'tracking-badge', text: tracking.status })] : [])]),
     el('span', { className: 'card-footer' }, [el('span', { className: 'verified', text: `Last verified ${dateLabel(record.last_verified)}` }), el('span', { className: 'view-details', text: 'View details →' })]),
@@ -135,9 +139,10 @@ function renderDetail(record) {
   const url = safeHttps(record.posting_url || record.source_url);
   const tracking = trackingFor(record);
   panel.replaceChildren();
+  panel.dataset.tone = toneFor(record);
   panel.append(
     el('button', { className: 'detail-close', type: 'button', 'aria-label': 'Close opportunity details', text: '×' }),
-    el('div', { className: 'detail-head' }, [el('div', {}, [el('p', { className: 'eyebrow', text: 'OPPORTUNITY DETAILS' }), el('h2', { text: record.role || 'Untitled opportunity' }), el('p', { text: `${record.company || 'Unknown company'} · ${record.location || 'Location not listed'}` })]), ...statusBadge(record)]),
+    el('div', { className: 'detail-head' }, [companyMark(record, 'large'), el('div', {}, [el('p', { className: 'eyebrow', text: 'OPPORTUNITY DETAILS' }), el('h2', { text: record.role || 'Untitled opportunity' }), el('p', { text: `${record.company || 'Unknown company'} · ${record.location || 'Location not listed'}` })]), ...statusBadge(record)]),
     el('div', { className: 'detail-actions' }),
     el('dl', { className: 'facts' }, [fact('Field', record.field_key), fact('Role family', record.role_key || record.role_family), fact('Opportunity type', record.opportunity_type), fact('Work mode', record.work_mode), fact('Term', record.term), fact('Deadline', dateLabel(record.deadline)), fact('Listing status', effectiveStatus(record)), fact('Last verified', dateLabel(record.last_verified)), fact('Source type', record.link_type || record.source)]),
   );
@@ -179,6 +184,8 @@ function renderDetail(record) {
 
 function renderResults() {
   const results = $('#results');
+  results.classList.toggle('stagger', state.stagger);
+  state.stagger = false;
   results.replaceChildren(...state.filtered.map(renderCard));
   if (!state.filtered.length) results.append(el('div', { className: 'empty', text: state.view === 'tracker' ? 'No saved opportunities match this status.' : 'No opportunities match every selected filter. Try clearing one or more filters. Coverage is still growing, so some categories have no listings yet.' }));
   $('#resultSummary').textContent = state.view === 'tracker' ? `${state.filtered.length} saved opportunities` : `${state.filtered.length} of ${state.records.length} public opportunities`;
@@ -225,12 +232,32 @@ function applyFilters() {
 
 function switchView(view) {
   state.view = view;
+  state.stagger = true;
   $('#catalogTab').classList.toggle('active', view === 'catalog');
   $('#trackerTab').classList.toggle('active', view === 'tracker');
   $('#catalogTab').setAttribute('aria-selected', String(view === 'catalog'));
   $('#trackerTab').setAttribute('aria-selected', String(view === 'tracker'));
   $('#trackerControls').hidden = view !== 'tracker';
   applyFilters();
+}
+
+function renderCatalogHealth() {
+  const total = state.records.length;
+  const groups = [['Active', 'Verified active', 'active'], ['Needs re-verification', 'Needs re-verification', 'review'], ['Closed', 'Closed', 'closed']]
+    .map(([status, label, tone]) => ({ label, tone, count: state.records.filter((record) => effectiveStatus(record) === status).length }));
+  const bar = el('div', { className: 'health-bar', 'aria-hidden': 'true' }, groups.filter((group) => group.count).map((group) => {
+    const segment = el('span', { className: `segment ${group.tone}` });
+    segment.style.setProperty('--share', String(group.count / total));
+    return segment;
+  }));
+  const legend = el('ul', { className: 'health-legend' }, groups.map((group) => el('li', { className: group.tone }, [el('span', { text: group.label }), el('strong', { text: String(group.count) })])));
+  const checked = state.records.map((record) => record.last_verified).filter(Boolean).sort();
+  const range = checked.length ? `Sources last checked ${dateLabel(checked[0])} – ${dateLabel(checked[checked.length - 1])}` : 'No verification dates recorded';
+  $('#catalogHealth').replaceChildren(
+    el('p', { className: 'health-label', text: 'Catalog status' }),
+    el('div', { className: 'health-total' }, [el('strong', { text: String(total) }), el('span', { text: 'public opportunities' })]),
+    bar, legend, el('p', { className: 'health-note', text: range }),
+  );
 }
 
 async function loadCatalog() {
@@ -250,8 +277,7 @@ async function loadCatalog() {
     addOptions(fields.term, ['Spring','Summer','Fall','Winter','Academic year','Year-round','Rolling']);
     addOptions(fields.status, [...new Set(state.records.map(effectiveStatus))]);
     saveTracker();
-    const statusCounts = [['Active', 'verified active'], ['Needs re-verification', 'need re-verification'], ['Closed', 'closed']].map(([status, label]) => `${state.records.filter((record) => effectiveStatus(record) === status).length} ${label}`);
-    $('#catalogHealth').replaceChildren(el('strong', { text: String(state.records.length) }), el('span', { text: 'public opportunities' }), el('span', { text: statusCounts.join(' · ') }));
+    renderCatalogHealth();
     applyFilters();
   } catch (error) {
     $('#resultSummary').textContent = 'The catalog could not be loaded.';
