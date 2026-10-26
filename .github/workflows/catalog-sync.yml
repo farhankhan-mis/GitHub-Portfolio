@@ -2,8 +2,9 @@ name: Validate and sync public catalog
 on:
   workflow_dispatch:
   schedule:
-    # Every Monday at 10:00 AM Eastern during daylight saving time.
-    - cron: '0 14 * * 1'
+    # Every Monday at 6:00 PM Eastern Standard Time (7:00 PM during daylight
+    # saving time), after the weekly catalog audit has closed passed deadlines.
+    - cron: '0 23 * * 1'
 permissions:
   contents: read
 jobs:
