@@ -1,0 +1,67 @@
+{
+  "run_date": "2026-10-26",
+  "agent": "claude",
+  "branch": "codex/agent-claude",
+  "status": "complete",
+  "existing_records": 78,
+  "final_records": 105,
+  "url_checks_attempted": 31,
+  "records_added": 27,
+  "records_reverified": 15,
+  "records_updated": 22,
+  "records_closed": [
+    {"id": "b5c77e3dd8efe806", "company": "Garda Capital Partners", "role": "Trading Analyst Intern, Credit", "evidence": "Greenhouse feed 404; posting page redirects to board error; not on live board"},
+    {"id": "d5b637bbcabc0001", "company": "Robinhood", "role": "Business Analyst Intern", "evidence": "Greenhouse feed 404; not among 155 live board jobs"},
+    {"id": "a489f69c4ccf246d", "company": "Coalfire", "role": "Compliance Advisory Internship", "evidence": "Lever feed and posting page 404; not on live board"},
+    {"id": "19c97fcda855698d", "company": "CareScout", "role": "Operations Administrative Intern", "evidence": "Workday job API 404; absent from board search"},
+    {"id": "ef3f510e700796e3", "company": "Genworth", "role": "Finance Development Program Intern", "evidence": "Workday job API 404; absent from board search"},
+    {"id": "e0e11fd6a8b4e4e7", "company": "Medtronic", "role": "Finance Intern", "evidence": "Deadline 2026-10-16 passed; absent from board search by requisition and title"}
+  ],
+  "records_reverified_ids": ["83c28517e95a1bbe", "abf98e2f51d7c025", "26a440f1d9a5b03c", "b73fb8513e0df696", "886caa3e387ab05d", "5abc980d7b287637", "96005c18f1581629", "2480cfdf02062ff9", "ed39fae63f793372", "63070c517d00d082", "6fffc389cbe112ae", "b79d17f88ab86be1", "8cc66eb026b581f5", "70f477810720f697", "97e452ebb042ec8b"],
+  "url_replacements": [
+    {"id": "8cc66eb026b581f5", "from": "WhiteWater Midstream board root", "to": "https://job-boards.greenhouse.io/whitewatermidstream/jobs/5217841007"},
+    {"id": "70f477810720f697", "from": "WhiteWater Midstream board root", "to": "https://job-boards.greenhouse.io/whitewatermidstream/jobs/5221567007"},
+    {"id": "97e452ebb042ec8b", "from": "WhiteWater Midstream board root", "to": "https://job-boards.greenhouse.io/whitewatermidstream/jobs/5221723007"}
+  ],
+  "left_needs_reverification": [
+    {"ids": ["30fc8c649ef405a6", "00d652bc225de86e", "fb8e4b387450098b", "f1f36e299c7b296c", "2ec7b8ce826faadb", "8bfabf40edd3d965", "7aeab1504fa7a683", "0fe23967b1dd8912", "09a93caf72caaf57", "09729088290b215d"], "reason": "Workday job API returns 403 (not 404) and the posting is absent from the board's search by requisition ID and title. A 403 is not proof of removal, so these stay flagged."}
+  ],
+  "candidates_examined": 33,
+  "candidates_skipped": [
+    "Stripe Software Engineer Intern and New Grad: no exact listing URL resolved within budget",
+    "Lyft Data Science Intern, Algorithms: master's/PhD only",
+    "Airbnb NextStay Fellow: limited to active-duty service members in specific transition programs",
+    "Ramp Customer Experience Associate: Ashby application page needs a browser to confirm; carried over"
+  ],
+  "fields_present": ["Accounting & Finance", "Arts, Design & Creative", "Business & Management", "Data, AI & Mathematics", "Engineering", "Media, Writing & Communications", "Sales, Marketing & Customer Experience", "Skilled Trades & Technical Services", "Technology & Computing"],
+  "zero_result_fields": ["Agriculture, Food & Natural Resources", "Architecture, Construction & Real Estate", "Education", "Environment & Sustainability", "Government & Public Policy", "Healthcare & Clinical", "Hospitality, Tourism & Events", "Law, Compliance & Public Safety", "Life Sciences & Biotechnology", "Nonprofit & Community Services", "Physical Sciences", "Public Health", "Social & Behavioral Sciences", "Sports, Fitness & Recreation", "Transportation, Logistics & Supply Chain"],
+  "feature": {
+    "item": "Validator: enforce taxonomy membership, listing_status values, no passed deadline on Active records, unique posting_url for Active records (audit findings 6-7)",
+    "commit": "73bc607",
+    "notes": "Passed deadlines on 'Needs re-verification' records and shared URLs among non-Active records are warnings, not errors (5 legacy shared-URL groups remain). The Active passed-deadline rule depends on the date, so the scheduled Monday CI can start failing when an Active record's deadline passes before the record is rechecked."
+  },
+  "review_scores": {
+    "site_reviewed": "live (published 2026-10-19, before this run's changes)",
+    "first_impression": {"score": 3, "evidence": "Polished hero, but the status card reads 'Verified active 0' of 78"},
+    "finding_something_relevant": {"score": 2, "evidence": "Searching 'software' and filtering to Engineering both return 0; 20 of 24 fields are empty; closed listings are mixed into the default list"},
+    "trust_in_data": {"score": 2, "evidence": "No Active records; all sources last checked Sep 11-16, about six weeks before the review"},
+    "detail_view_and_apply": {"score": 4, "evidence": "Clear facts grid; Apply opens the official posting in a new tab with noopener; the Highlights section repeats the description"},
+    "tracker": {"score": 3, "evidence": "Save, status and notes work locally; after 'Remove from my applications' the open dialog still says 'Saved ✓'; the empty tracker says 'No saved opportunities match this status'"},
+    "mobile": {"score": 3, "evidence": "No sideways scroll at 375px, but the first result sits about 2,360px down, roughly three screens"},
+    "accessibility": {"score": 3, "evidence": "All filters labeled and focus moves into the dialog, but closing it sends focus to <body> instead of the trigger; footer links are under 32px tall"}
+  },
+  "top_problems": [
+    "Trust: the live site shows 0 verified listings. Publishing this run brings it to 42 Active.",
+    "Discovery: most fields are still empty; closed listings show by default; Deadline sort puts past deadlines first",
+    "Dialog: focus isn't returned on close, and the dialog shows stale state after a tracker removal (audit finding 9)"
+  ],
+  "local_branch_smoke_test": "105 cards render; 42 Active; Engineering 5, Technology 4, Media 3, Skilled Trades 3, Arts 4; Fellowship 4, Apprenticeship 3, Entry-level 5; only console error is the pre-existing meta-CSP frame-ancestors warning",
+  "carried_over": [
+    "Recheck the remaining ~20 oldest records (Apple, Baird, BofA, Boeing/Citi search URLs, aggregators, Microsoft, SC&H, Greenberg PDF, GHJ/HCVT Lever roots)",
+    "The 10 Workday 403 records: confirm in a browser or close next week",
+    "Discovery for 15 empty fields, plus part-time, co-op, research and on-campus types",
+    "Ramp Customer Experience Associate (Ashby) apply-flow check",
+    "Backlog: dialog focus return and stale dialog after removal; hide Closed by default or sort it last; Deadline sort ignoring past dates; frame-ancestors meta CSP"
+  ],
+  "note": "last_verified was advanced only for postings confirmed live in the official feed with a loading application form. Nothing was published."
+}
