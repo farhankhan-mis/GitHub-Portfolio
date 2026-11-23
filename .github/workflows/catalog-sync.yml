@@ -21,8 +21,6 @@ jobs:
         run: npm test
       - name: Audit freshness
         run: npm run audit
-      - name: Sync public catalog mirror
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: node scripts/sync_catalog.mjs
+      # The Supabase mirror step was removed on 2026-11-23 (user-approved): the
+      # site never reads it and its failing sync sent weekly failure emails.
+      # scripts/sync_catalog.mjs remains for manual use.
