@@ -1,0 +1,37 @@
+name: Refresh public catalog
+on:
+  workflow_dispatch:
+  schedule:
+    # Every day at 11:17 UTC (6:17 AM Eastern in winter, 7:17 AM in summer).
+    - cron: '17 11 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: catalog-refresh
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      # Reads documented public job-board feeds, closes postings that left their feed,
+      # and aborts without writing if too many boards fail or listings drop sharply.
+      - name: Refresh listings from employer job feeds
+        run: node scripts/refresh_catalog.mjs
+      - name: Validate catalog and run unit tests
+        run: npm test
+      - name: Publish the refreshed catalog
+        run: |
+          if git diff --quiet -- opportunities.json; then
+            echo "Listings unchanged; nothing to publish."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add opportunities.json data/refresh-status.json
+          git commit -m "Daily catalog refresh $(date -u +%F)"
+          git push

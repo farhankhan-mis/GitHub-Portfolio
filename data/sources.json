@@ -1,0 +1,505 @@
+{
+  "updated": "2026-11-23",
+  "note": "Employers whose documented public job-board feeds the daily refresh reads. Add an employer by adding its ats and board slug.",
+  "sources": [
+    {
+      "ats": "ashby",
+      "slug": "baseten",
+      "company": "Baseten"
+    },
+    {
+      "ats": "ashby",
+      "slug": "benchling",
+      "company": "Benchling"
+    },
+    {
+      "ats": "ashby",
+      "slug": "cerebras",
+      "company": "Cerebras"
+    },
+    {
+      "ats": "ashby",
+      "slug": "cohere",
+      "company": "Cohere"
+    },
+    {
+      "ats": "ashby",
+      "slug": "decagon",
+      "company": "Decagon"
+    },
+    {
+      "ats": "ashby",
+      "slug": "helion",
+      "company": "Helion Energy"
+    },
+    {
+      "ats": "ashby",
+      "slug": "lambda",
+      "company": "Lambda"
+    },
+    {
+      "ats": "ashby",
+      "slug": "mercor",
+      "company": "Mercor"
+    },
+    {
+      "ats": "ashby",
+      "slug": "modal",
+      "company": "Modal"
+    },
+    {
+      "ats": "ashby",
+      "slug": "notion",
+      "company": "Notion"
+    },
+    {
+      "ats": "ashby",
+      "slug": "perplexity",
+      "company": "Perplexity"
+    },
+    {
+      "ats": "ashby",
+      "slug": "physicalintelligence",
+      "company": "Physical Intelligence"
+    },
+    {
+      "ats": "ashby",
+      "slug": "ramp",
+      "company": "Ramp"
+    },
+    {
+      "ats": "ashby",
+      "slug": "sierra",
+      "company": "Sierra"
+    },
+    {
+      "ats": "ashby",
+      "slug": "skydio",
+      "company": "Skydio"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "aclu",
+      "default_role": "Policy Analysis",
+      "default_field": "Government & Public Policy"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "affirm"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "airbnb"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "akunacapital",
+      "default_role": "Investment Management",
+      "default_field": "Accounting & Finance"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "alphafmcrolesearlycareers"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "andurilindustries"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "archer"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "astranis"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "axios",
+      "default_role": "Journalism",
+      "default_field": "Media, Writing & Communications"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "block"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "brex"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "bridgewater89",
+      "default_role": "Investment Management",
+      "default_field": "Accounting & Finance"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "carta"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "charlesriverassociates"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "cloudflare"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "coinbase"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "databricks"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "datadog"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "doordashusa"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "duolingo"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "epicgames"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "figma"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "gardacp",
+      "default_role": "Investment Management",
+      "default_field": "Accounting & Finance"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "ginkgobioworks",
+      "default_role": "Biotechnology",
+      "default_field": "Life Sciences & Biotechnology"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "gitlab"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "glossier"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "gusto"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "hearst",
+      "default_role": "Journalism",
+      "default_field": "Media, Writing & Communications"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "imc",
+      "default_role": "Investment Management",
+      "default_field": "Accounting & Finance"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "insider",
+      "default_role": "Journalism",
+      "default_field": "Media, Writing & Communications"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "ixllearning",
+      "default_role": "Educational Technology",
+      "default_field": "Education"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "krollbondratingagency"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "lucidmotors"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "lyft"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "magnetmediafilms"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "mongodb"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "neuralink"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "onemedical",
+      "default_role": "Nursing",
+      "default_field": "Healthcare & Clinical"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "oscar"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "palmetto"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "perpay"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "pinterest"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "point72",
+      "default_role": "Investment Management",
+      "default_field": "Accounting & Finance"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "propublica",
+      "default_role": "Journalism",
+      "default_field": "Media, Writing & Communications"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "reformation"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "relativity"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "riotgames"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "robinhood"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "roblox"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "rocketlab"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "rubrik"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "sagaeducation",
+      "default_role": "Teaching Assistant & Tutoring",
+      "default_field": "Education"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "samsara"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "scaleai"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "semafor",
+      "default_role": "Journalism",
+      "default_field": "Media, Writing & Communications"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "sothebys"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "spacex"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "strandtherapeutics",
+      "default_role": "Biotechnology",
+      "default_field": "Life Sciences & Biotechnology"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "stripe"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "thelibragroup"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "thenewyorktimes",
+      "default_role": "Journalism",
+      "default_field": "Media, Writing & Communications"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "thenuclearcompany"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "twitch"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "usafacts",
+      "default_role": "Policy Analysis",
+      "default_field": "Government & Public Policy"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "vardaspace"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "walleyecapital-external-students",
+      "default_role": "Investment Management",
+      "default_field": "Accounting & Finance"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "waymo"
+    },
+    {
+      "ats": "greenhouse",
+      "slug": "whitewatermidstream"
+    },
+    {
+      "ats": "lever",
+      "slug": "brookings",
+      "company": "Brookings Institution",
+      "default_role": "Policy Analysis",
+      "default_field": "Government & Public Policy"
+    },
+    {
+      "ats": "lever",
+      "slug": "coalfire",
+      "company": "Coalfire"
+    },
+    {
+      "ats": "lever",
+      "slug": "dnllc",
+      "company": "DN Tanks",
+      "default_role": "Construction Management",
+      "default_field": "Architecture, Construction & Real Estate"
+    },
+    {
+      "ats": "lever",
+      "slug": "forbrightbank",
+      "company": "Forbright Bank"
+    },
+    {
+      "ats": "lever",
+      "slug": "foth",
+      "company": "Foth"
+    },
+    {
+      "ats": "lever",
+      "slug": "Gantri",
+      "company": "Gantri"
+    },
+    {
+      "ats": "lever",
+      "slug": "ghj",
+      "company": "GHJ",
+      "default_role": "Accounting",
+      "default_field": "Accounting & Finance"
+    },
+    {
+      "ats": "lever",
+      "slug": "hcvt",
+      "company": "HCVT",
+      "default_role": "Accounting",
+      "default_field": "Accounting & Finance"
+    },
+    {
+      "ats": "lever",
+      "slug": "palantir",
+      "company": "Palantir"
+    },
+    {
+      "ats": "lever",
+      "slug": "qvest.us",
+      "company": "Qvest US"
+    },
+    {
+      "ats": "lever",
+      "slug": "sierraclub",
+      "company": "Sierra Club",
+      "default_role": "Environmental Policy",
+      "default_field": "Environment & Sustainability"
+    },
+    {
+      "ats": "lever",
+      "slug": "studypoint",
+      "company": "StudyPoint",
+      "default_role": "Teaching Assistant & Tutoring",
+      "default_field": "Education"
+    },
+    {
+      "ats": "lever",
+      "slug": "tkda",
+      "company": "TKDA"
+    },
+    {
+      "ats": "lever",
+      "slug": "zoox",
+      "company": "Zoox"
+    },
+    {
+      "ats": "smartrecruiters",
+      "slug": "BoschGroup",
+      "company": "Bosch"
+    },
+    {
+      "ats": "smartrecruiters",
+      "slug": "Continental",
+      "company": "Continental"
+    },
+    {
+      "ats": "smartrecruiters",
+      "slug": "LinkedIn3",
+      "company": "LinkedIn"
+    },
+    {
+      "ats": "smartrecruiters",
+      "slug": "NBCUniversal3",
+      "company": "NBCUniversal",
+      "default_role": "Broadcasting",
+      "default_field": "Media, Writing & Communications"
+    },
+    {
+      "ats": "smartrecruiters",
+      "slug": "ServiceNow",
+      "company": "ServiceNow"
+    },
+    {
+      "ats": "smartrecruiters",
+      "slug": "WesternDigital",
+      "company": "Western Digital"
+    }
+  ]
+}

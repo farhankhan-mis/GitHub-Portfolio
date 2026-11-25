@@ -1,40 +1,35 @@
-# Public Opportunity Catalog
+# Opportunity Catalog
 
-A static, privacy-safe catalog of internships and early-career opportunities collected from public sources.
+A job search for college students: internships, co-ops, fellowships, apprenticeships and entry-level jobs, refreshed every morning from employers' own job boards.
 
-[View the live catalog](https://farhankhan-mis.github.io/GitHub-Portfolio/)
+[Open the live site](https://farhankhan-mis.github.io/GitHub-Portfolio/)
 
-## Scope
+## How listings stay accurate
 
-This project contains only public opportunity metadata. It must never contain a private application tracker, application statuses, notes, networking contacts, résumés, extracted résumé text, user accounts, or credentials.
+- **Daily refresh.** `.github/workflows/catalog-refresh.yml` runs `scripts/refresh_catalog.mjs` every morning. It reads the documented public posting feeds (Greenhouse, Lever, Ashby, SmartRecruiters) of every employer in `data/sources.json` and keeps US student and early-career postings.
+- **Closed means gone.** A posting that leaves its employer's feed is marked Closed the next day and disappears from search. A listing with a passed deadline is closed too. Closed feed listings are pruned after 45 days; git keeps the history.
+- **Safe by default.** If a board fails to load, its listings are left alone rather than closed. If a third of boards fail, or open listings drop by half, the run stops without writing anything. The site is published only when the validator and unit tests pass.
+- **Explainable classification.** `scripts/lib/classify.mjs` uses plain rules to decide whether a posting is for students, and to set its type, field, role, location, work mode and term. `scripts/classify.test.mjs` pins the rules down with real titles.
+- **Hand-verified listings.** Employers without a public feed (for example, Workday sites) are added by hand and appear in search only while their last check is under 14 days old.
 
-The browser reads `opportunities.json` directly. Search and filtering run locally; there is no account system and no private data collection.
+## Privacy
 
-## Catalog rules
+There are no accounts and no tracking. Saved jobs, application statuses and notes are stored only in the visitor's browser (`localStorage`) and are never sent anywhere. The repository holds public posting data only. See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md).
 
-- Prefer canonical employer application pages.
-- Every record requires an HTTPS source URL and a verification date.
-- Records older than 14 days are shown as needing re-verification.
-- Passed deadlines are closed during normalization.
-- A stable `canonical_key` prevents duplicates across publishing systems.
-- `node scripts/validate_catalog.mjs` must pass before publishing or syncing.
-
-## Maintenance
+## Working on it
 
 ```text
-node scripts/normalize_catalog.mjs
-node scripts/validate_catalog.mjs
-node scripts/audit_catalog.mjs
+npm test                         # syntax, classifier tests, catalog validation
+node scripts/refresh_catalog.mjs --dry-run      # read feeds, print the summary, write nothing
+node scripts/refresh_catalog.mjs --out=tmp.json # write the result somewhere else to inspect it
 ```
 
-The Supabase sync is optional and public-only. It validates the catalog, upserts current records, and closes database records no longer present in the JSON source. Its service-role credential belongs only in encrypted GitHub Actions secrets.
+To add an employer, add `{ "ats": "greenhouse" | "lever" | "ashby" | "smartrecruiters", "slug": "<board name>", "company": "<display name>" }` to `data/sources.json`. Optionally add `default_role` and `default_field` (taxonomy values) for employers whose titles don't say the field, such as a newsroom.
 
 ## Architecture
 
-- `index.html`, `styles.css`, `app.js`: static GitHub Pages interface
-- `opportunities.json`: public source of truth
-- `taxonomy.js`: classification vocabulary used by maintenance workflows
-- `scripts/`: normalization, validation, audit, and optional Supabase sync
-- `.github/workflows/catalog-sync.yml`: scheduled validation and public sync
-
-See [SECURITY.md](SECURITY.md) and [PRIVACY.md](PRIVACY.md).
+- `index.html`, `styles.css`, `app.js`: static GitHub Pages site. Search, filters, list and detail view, and the private tracker.
+- `opportunities.json`: the listings; `data/refresh-status.json`: when and how the last refresh ran.
+- `taxonomy.js`: career fields, roles and opportunity types.
+- `scripts/`: refresh, classifier, validation and audit.
+- `.github/workflows/catalog-refresh.yml`: the daily refresh and publish.

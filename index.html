@@ -3,60 +3,103 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="A privacy-safe catalog of public internships and early-career opportunities, with source and verification details.">
+  <meta name="description" content="Search internships, co-ops, fellowships and entry-level jobs for college students. Listings are checked against employers' job boards every day.">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
-  <title>Public Opportunity Catalog</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <title>Opportunity Catalog · Internships and entry-level jobs for students</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="./" aria-label="Public Opportunity Catalog home"><span class="brand-mark">OC</span><span><strong>Opportunity Catalog</strong><small>Public sources only</small></span></a>
-    <nav class="header-nav" aria-label="Site"><a href="#standards-title">Our standard</a><a class="repo-link" href="https://github.com/farhankhan-mis/GitHub-Portfolio" target="_blank" rel="noopener noreferrer">View source</a></nav>
+  <a class="skip-link" href="#results">Skip to job results</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="./" aria-label="Opportunity Catalog home"><span class="brand-mark" aria-hidden="true">OC</span><span class="brand-name">Opportunity Catalog</span></a>
+      <nav class="topnav" aria-label="Views">
+        <button class="topnav-link active" id="browseTab" type="button" aria-current="page">Find jobs</button>
+        <button class="topnav-link" id="savedTab" type="button">My applications <span class="count" id="trackedCount">0</span></button>
+      </nav>
+    </div>
   </header>
-  <section class="hero" aria-labelledby="page-title">
-    <div class="intro">
-      <div class="intro-copy"><p class="eyebrow">PUBLIC OPPORTUNITY DIRECTORY</p><h1 id="page-title">Find an opportunity worth pursuing.</h1><p>Explore jobs, internships, and student opportunities by major, career field, role, location, schedule, work mode, and more. Every record links to its source and shows when it was last checked and whether it still needs re-verification.</p><ul class="hero-points"><li>Official links preferred</li><li>Saved privately in your browser</li><li>No account needed</li></ul></div>
-      <div class="catalog-health" id="catalogHealth" aria-live="polite"><p class="health-label">Catalog status</p><span class="health-loading">Loading catalog…</span></div>
+
+  <section class="search-hero" id="searchHero" aria-labelledby="page-title">
+    <div class="search-hero-inner">
+      <h1 id="page-title">Internships and entry-level jobs for college students</h1>
+      <p class="freshness" id="freshness" aria-live="polite">Loading listings…</p>
+      <form class="searchbar" id="searchForm" role="search">
+        <label class="search-field what"><span class="field-label">What</span><input id="query" type="search" placeholder="Job title, skill, or company" autocomplete="off" enterkeyhint="search"></label>
+        <label class="search-field where"><span class="field-label">Where</span><input id="where" type="search" placeholder="City, state, or remote" autocomplete="off" list="whereOptions" enterkeyhint="search"></label>
+        <datalist id="whereOptions"></datalist>
+        <button class="search-button" type="submit">Search</button>
+      </form>
     </div>
   </section>
-  <main>
-    <section class="workspace" aria-label="Browse and track opportunities">
-      <div class="view-tabs" role="tablist" aria-label="Catalog views">
-        <button class="view-tab active" id="catalogTab" type="button" role="tab" aria-selected="true">Browse opportunities</button>
-        <button class="view-tab" id="trackerTab" type="button" role="tab" aria-selected="false">My applications <span id="trackedCount">0</span></button>
-        <p class="local-note">Saved privately in this browser only</p>
+
+  <main class="page" id="main">
+    <div class="filter-bar" id="filterBar" aria-label="Filters">
+      <div class="chip-group" role="group" aria-label="Opportunity type">
+        <button class="chip" type="button" data-type="internship" aria-pressed="false">Internship</button>
+        <button class="chip" type="button" data-type="coop" aria-pressed="false">Co-op</button>
+        <button class="chip" type="button" data-type="entry" aria-pressed="false">New grad &amp; entry-level</button>
+        <button class="chip" type="button" data-type="fellowship" aria-pressed="false">Fellowship</button>
+        <button class="chip" type="button" data-type="parttime" aria-pressed="false">Part-time</button>
+        <button class="chip" type="button" data-type="apprentice" aria-pressed="false">Apprenticeship</button>
       </div>
-      <form class="filters expanded-filters" id="filters" role="search">
-        <label class="wide">Search<input id="query" type="search" placeholder="Company, role, skill, major, keyword, or city" autocomplete="off"></label>
-        <label>I am looking for<select id="audience"><option value="">Jobs and student opportunities</option><option value="student">Internships and student opportunities</option><option value="career">Jobs for any career stage</option></select></label>
-        <label>Major or academic program<select id="major"><option value="">All majors and programs</option></select></label>
-        <label>Career field<select id="field"><option value="">All career fields</option></select></label>
-        <label>Role family<select id="role"><option value="">All role families</option></select></label>
-        <label>Opportunity type<select id="opportunityType"><option value="">All opportunity types</option></select></label>
-        <label>Work mode<select id="mode"><option value="">All work modes</option></select></label>
-        <label>Schedule<select id="schedule"><option value="">All schedules</option></select></label>
-        <label>State or region<select id="region"><option value="">All locations</option></select></label>
-        <label>Term or season<select id="term"><option value="">All terms</option></select></label>
-        <label>Status<select id="status"><option value="">All statuses</option></select></label>
-        <button id="clearFilters" type="button">Clear all filters</button>
-      </form>
-      <div class="tracker-controls" id="trackerControls" hidden><div class="application-status-tabs" id="applicationStatusTabs" role="tablist" aria-label="Application status views"><button class="application-status-tab active" type="button" role="tab" data-tracking-view="all">Active</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Saved">Saved</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Planning">Planning</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Applied">Applied</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Interviewing">Interviewing</button><button class="application-status-tab" type="button" role="tab" data-tracking-view="Offer">Offer</button><button class="application-status-tab archive-tab" type="button" role="tab" data-tracking-view="archive">Archive</button></div></div>
-      <div class="results-heading"><p id="resultSummary" aria-live="polite">Loading opportunities…</p><label class="sort-label">Sort<select id="sort"><option value="verified">Recently verified</option><option value="deadline">Deadline</option><option value="company">Company</option></select></label></div>
-      <div class="catalog-layout">
-        <div class="results" id="results" aria-label="Opportunity results"></div>
-        <dialog class="detail" id="detail" aria-label="Selected opportunity details"></dialog>
+      <div class="chip-group" role="group" aria-label="Work mode">
+        <button class="chip" type="button" data-mode="Remote" aria-pressed="false">Remote</button>
+        <button class="chip" type="button" data-mode="Hybrid" aria-pressed="false">Hybrid</button>
+        <button class="chip" type="button" data-mode="On-site" aria-pressed="false">On-site</button>
       </div>
-    </section>
-    <section class="standards" aria-labelledby="standards-title">
-      <div class="standards-intro"><p class="eyebrow">CATALOG STANDARD</p><h2 id="standards-title">Transparent by design</h2><p>Every listing follows the same three rules, so you can judge it before you spend time on an application.</p></div>
-      <div class="standard-grid"><article><strong>Public sources only</strong><p>No private tracker, application history, résumé, notes, contacts, or account data are used.</p></article><article><strong>Verification dates stay visible</strong><p>Every opportunity shows when its official source was last checked.</p></article><article><strong>Official links preferred</strong><p>Employer application pages take priority over aggregators and reposts.</p></article></div>
+      <div class="select-group">
+        <label class="pill-select"><span class="sr-only">Date posted</span><select id="posted"><option value="">Any date</option><option value="1">Last 24 hours</option><option value="3">Last 3 days</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select></label>
+        <label class="pill-select"><span class="sr-only">Career field</span><select id="field"><option value="">All career fields</option></select></label>
+        <label class="pill-select"><span class="sr-only">Major</span><select id="major"><option value="">Any major</option></select></label>
+        <label class="pill-select"><span class="sr-only">Term</span><select id="term"><option value="">Any term</option><option value="Spring">Spring</option><option value="Summer">Summer</option><option value="Fall">Fall</option><option value="Winter">Winter</option><option value="Year-round">Year-round</option></select></label>
+        <button class="clear-link" id="clearFilters" type="button">Clear all</button>
+      </div>
+    </div>
+
+    <div class="tracker-tabs" id="trackerControls" hidden>
+      <div class="status-tabs" id="applicationStatusTabs" role="group" aria-label="Application status">
+        <button class="status-tab active" type="button" data-tracking-view="all" aria-pressed="true">Active</button>
+        <button class="status-tab" type="button" data-tracking-view="Saved" aria-pressed="false">Saved</button>
+        <button class="status-tab" type="button" data-tracking-view="Planning" aria-pressed="false">Planning</button>
+        <button class="status-tab" type="button" data-tracking-view="Applied" aria-pressed="false">Applied</button>
+        <button class="status-tab" type="button" data-tracking-view="Interviewing" aria-pressed="false">Interviewing</button>
+        <button class="status-tab" type="button" data-tracking-view="Offer" aria-pressed="false">Offer</button>
+        <button class="status-tab" type="button" data-tracking-view="archive" aria-pressed="false">Archive</button>
+      </div>
+      <p class="local-note" id="localNote">Saved privately in this browser. Nothing is sent anywhere.</p>
+    </div>
+
+    <div class="results-header">
+      <p id="resultSummary" aria-live="polite">Loading…</p>
+      <label class="sort-select"><span>Sort by</span><select id="sort"><option value="relevance">Relevance</option><option value="recent">Most recent</option><option value="deadline">Closing soon</option></select></label>
+    </div>
+
+    <div class="split">
+      <section class="results-list" id="results" tabindex="-1" aria-label="Job results"></section>
+      <aside class="detail-pane" id="detail" tabindex="-1" aria-label="Job details"></aside>
+    </div>
+
+    <section class="how" aria-labelledby="how-title">
+      <h2 id="how-title">How listings stay accurate</h2>
+      <ul class="how-list">
+        <li><strong>Checked every morning.</strong> Most listings come straight from employers' own job boards and are rechecked daily. A posting that comes down disappears here the next day.</li>
+        <li><strong>Always the employer's page.</strong> Apply links go to the employer or its hiring system, never to a repost.</li>
+        <li><strong>Your applications stay private.</strong> Saved jobs, statuses and notes live only in this browser. There's no account and no tracking.</li>
+      </ul>
     </section>
   </main>
-  <footer><p>Opportunity information can change without notice. Confirm details on the employer’s official page before applying.</p><nav><a href="PRIVACY.md">Privacy</a><a href="SECURITY.md">Security</a></nav></footer>
-  <noscript>This catalog requires JavaScript to load and filter its public data.</noscript>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p id="footerNote">Listings change quickly. Confirm details on the employer's page before applying.</p>
+      <nav aria-label="Policies"><a href="PRIVACY.md">Privacy</a><a href="SECURITY.md">Security</a><a href="https://github.com/farhankhan-mis/GitHub-Portfolio" target="_blank" rel="noopener noreferrer">Source</a></nav>
+    </div>
+  </footer>
+  <noscript>This job search needs JavaScript to load and filter listings.</noscript>
   <script src="taxonomy.js?v=1" defer></script>
-  <script src="app.js?v=13" defer></script>
+  <script src="app.js?v=16" defer></script>
 </body>
 </html>
