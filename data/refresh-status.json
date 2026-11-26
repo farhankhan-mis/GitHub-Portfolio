@@ -1,23 +1,23 @@
 {
-  "last_run": "2026-11-25T21:34:11.702Z",
-  "run_date": "2026-11-25",
+  "last_run": "2026-11-26T20:12:09.913Z",
+  "run_date": "2026-11-26",
   "boards": 103,
   "boards_failed": [],
-  "postings_read": 21246,
+  "postings_read": 21291,
   "skipped": {
-    "notEarlyCareer": 20008,
-    "outsideUS": 155,
+    "notEarlyCareer": 20044,
+    "outsideUS": 154,
     "unclearLocation": 39,
     "deadlinePassed": 0,
     "insecureUrl": 0
   },
-  "added": 29,
-  "reverified": 1036,
+  "added": 11,
+  "reverified": 1064,
   "reopened": 0,
-  "closed": 13,
+  "closed": 1,
   "pruned": 0,
   "outOfScope": 0,
-  "active_total": 1093,
-  "active_from_feeds": 1065,
-  "records_total": 1203
+  "active_total": 1103,
+  "active_from_feeds": 1075,
+  "records_total": 1214
 }
